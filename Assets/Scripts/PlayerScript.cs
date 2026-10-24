@@ -10,7 +10,7 @@ public class PlayerScript : MonoBehaviour
     private Animator playerAR;
     private SpriteRenderer playerSR;
 
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private int groundLayerInt;
     private PlayerState playerState;
     private enum PlayerState
     {
@@ -87,15 +87,14 @@ public class PlayerScript : MonoBehaviour
             playerRB.linearVelocity = jumpVelocity;
         }
     }
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == groundLayer)
+        if (collision.gameObject.layer == groundLayerInt)
         {
             if (jumping)
             {
                 jumping = false;
                 playerAR.SetBool("Jumping" , false);
-                Debug.Log(true);
             }
         }
     }
