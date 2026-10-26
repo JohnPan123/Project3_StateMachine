@@ -87,6 +87,10 @@ public class PlayerScript : MonoBehaviour
             playerRB.linearVelocity = jumpVelocity;
         }
     }
+    private void JumpLandingDone() //For animator use only
+    {
+        playerAR.SetBool("Jump Landing Done", true);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == groundLayerInt)
@@ -95,6 +99,8 @@ public class PlayerScript : MonoBehaviour
             {
                 jumping = false;
                 playerAR.SetBool("Jumping" , false);
+                playerAR.SetBool("Jump Landing Done" , false);
+
             }
         }
     }
