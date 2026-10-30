@@ -289,18 +289,21 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -2.5234776, y: 0.77687216}
-      - {x: -3.236596, y: 0.13767079}
-      - {x: -3.2445383, y: -0.17458868}
+      - {x: -3.1768332, y: 0.23727587}
+      - {x: -3.8903294, y: 0.47841883}
+      - {x: -3.849638, y: 7.1037145}
+      - {x: -4.3888273, y: 7.9443693}
+      - {x: -4.3557825, y: -0.19462109}
       - {x: 14.120925, y: -0.17772532}
       - {x: 22.450087, y: -0.1947577}
       - {x: 30.872093, y: -0.17111015}
       - {x: 30.871672, y: 0.7911067}
       - {x: 28.859247, y: 0.78224134}
       - {x: 28.07089, y: 1.3192883}
-      - {x: 27.045582, y: 1.3002398}
+      - {x: 26.981667, y: 1.3215451}
       - {x: 26.351906, y: 1.8043604}
-      - {x: 25.386087, y: 1.7722399}
-      - {x: 24.61343, y: 2.3672943}
+      - {x: 25.272459, y: 1.8077486}
+      - {x: 24.61343, y: 2.3885996}
       - {x: 20.552406, y: 2.3895357}
       - {x: 20.011936, y: 1.8557124}
       - {x: 14.62749, y: 1.8614249}
@@ -323,6 +326,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 519420032}
+  - component: {fileID: 519420033}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
@@ -445,12 +449,25 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.19, y: 1.17, z: -2.9138377}
-  m_LocalScale: {x: 0.29138377, y: 0.29138377, z: 0.29138377}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1958985506}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e8f6d6b24724642b4816aefd1b36c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraScript
+  player: {fileID: 1958985504}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,11 +766,10 @@ Transform:
   m_GameObject: {fileID: 1958985504}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.78, y: -3.89, z: 0}
+  m_LocalPosition: {x: 6.84, y: -2.18, z: 0}
   m_LocalScale: {x: 3.4319, y: 3.4319, z: 3.4319}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 519420032}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1958985507
@@ -855,10 +871,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
   groundLayerInt: 6
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 619394802}
+  - {fileID: 519420032}
   - {fileID: 1958985506}
   - {fileID: 1844536519}

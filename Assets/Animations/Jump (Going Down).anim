@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpLanding
+  m_Name: Jump (Going Down)
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,13 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 2288658778589579382, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
-    - time: 0.06666667
-      value: {fileID: 4486660383750795767, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
-    - time: 0.16666667
-      value: {fileID: 3159917473305140952, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
-    - time: 0.25
-      value: {fileID: 4867273651481043149, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
+      value: {fileID: 2465389206407389680, guid: 104505929692b9d49aabacd746f4de41, type: 3}
+    - time: 0.05
+      value: {fileID: -5696641396967967901, guid: 104505929692b9d49aabacd746f4de41, type: 3}
+    - time: 0.15
+      value: {fileID: -6462552108963237688, guid: 104505929692b9d49aabacd746f4de41, type: 3}
+    - time: 0.21666667
+      value: {fileID: 5165181971226567972, guid: 104505929692b9d49aabacd746f4de41, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -50,16 +50,16 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 2288658778589579382, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
-    - {fileID: 4486660383750795767, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
-    - {fileID: 3159917473305140952, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
-    - {fileID: 4867273651481043149, guid: 75a2e58bab08aea46bf405568cb671de, type: 3}
+    - {fileID: 2465389206407389680, guid: 104505929692b9d49aabacd746f4de41, type: 3}
+    - {fileID: -5696641396967967901, guid: 104505929692b9d49aabacd746f4de41, type: 3}
+    - {fileID: -6462552108963237688, guid: 104505929692b9d49aabacd746f4de41, type: 3}
+    - {fileID: 5165181971226567972, guid: 104505929692b9d49aabacd746f4de41, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.26666668
+    m_StopTime: 0.23333333
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -78,11 +78,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0.25
-    functionName: JumpLandingDone
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []

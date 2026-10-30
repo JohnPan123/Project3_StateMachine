@@ -17,6 +17,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "8e241ec0-8b8e-475f-8075-ff693878887d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Jumping",
                     "type": "Button",
                     "id": "3b4ace7e-1dcc-42dd-94a2-ecef71102114",
@@ -69,6 +79,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jumping",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "08b0b391-dd38-4fff-b90f-ecbd4962a361",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

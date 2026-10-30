@@ -5,25 +5,29 @@ public class PlayerScript : MonoBehaviour
 {
     private InputAction horizontalMovementInput;
     private InputAction jumpInput;
+    private InputAction dashInput;
 
     private Rigidbody2D playerRB;
     private Animator playerAR;
     private SpriteRenderer playerSR;
 
     [SerializeField] private int groundLayerInt;
+    [SerializeField] private LayerMask groundLayer;
     private PlayerState playerState;
     private enum PlayerState
     {
         Idle = 0,
         Sprint = 1,
         Jump = 2,
-        Falling = 3
+        Dash = 3
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         horizontalMovementInput = InputSystem.actions.FindAction("Horizontal Movement");
+        dashInput = InputSystem.actions.FindAction("Dash");
         jumpInput = InputSystem.actions.FindAction("Jumping");
 
         playerRB = GetComponent<Rigidbody2D>();
@@ -35,17 +39,45 @@ public class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         Sprinting();
-        DoJump();
+        ExcuteJump();
+        ExecuteDash();
     }
     // Update is called once per frame
     void Update()
     {
+        //FieldPlacement();
         CheckForJump();
+        CheckForDash();
 
         SetState();
         StateEffects();
     }
+    /*
+    private Vector2 distanceVar;
+    float distance;
+    float shouldBeDistance = 3f;
+    private void FieldPlacement()
+    {
+        distance = Physics2D.Raycast(transform.position, Vector2.down , 100f , groundLayer).distance;
 
+        Debug.Log(distance);
+
+        if (distance < shouldBeDistance)
+        {
+            distanceVar.y = playerRB.position.y + (shouldBeDistance - distance);
+            distanceVar.x = playerRB.position.x;
+
+            playerRB.position = distanceVar;
+        }
+        else if (distance >= shouldBeDistance)
+        {
+            distanceVar.y = playerRB.position.y + -1 * (shouldBeDistance - distance);
+            distanceVar.x = playerRB.position.x;
+
+            playerRB.position = distanceVar;
+        }
+    }
+    */
     private float sprintSpeed = 5f;
     private float horizontalMovement = 0f;
     private Vector2 velocity = new Vector2(0f , 0f);
@@ -56,10 +88,47 @@ public class PlayerScript : MonoBehaviour
         if (Mathf.Abs(horizontalMovement) > 0)
             velocity.x = sprintSpeed * horizontalMovement;
         else
-            velocity.x = 0;
+            velocity.x = Mathf.Lerp(playerRB.linearVelocityX , 0 , 0.01f);
 
         velocity.y = playerRB.linearVelocityY;
         playerRB.linearVelocity = velocity;
+    }
+
+    private bool dashing = false;
+    private void CheckForDash()
+    {
+        if (!DoingSomething() && dashInput.triggered)
+        {
+            direction = horizontalMovementInput.ReadValue<float>();
+            dashing = true;
+            
+            currentDashSpeed = dashSpeedPeak * direction;
+            sprintSpeedForDashing = sprintSpeed * direction;
+        }
+    }
+
+    private Vector2 velocityForDashing = new Vector2();
+    private const float dashSpeedPeak = 20f;
+    private float sprintSpeedForDashing = 5f;
+    private float currentDashSpeed;
+    private float direction;
+    private void ExecuteDash()
+    {
+        if (dashing)
+        {
+            if (Mathf.Abs(currentDashSpeed) > 10f)
+                currentDashSpeed = Mathf.Lerp(currentDashSpeed , sprintSpeedForDashing , 0.1f);
+            else
+                currentDashSpeed = Mathf.Lerp(currentDashSpeed, sprintSpeedForDashing , 0.3f);
+
+            velocityForDashing.x = currentDashSpeed;
+            velocityForDashing.y = playerRB.linearVelocityY;
+
+            playerRB.linearVelocity = velocityForDashing;
+
+            if (Mathf.Abs(playerRB.linearVelocityX) <= (sprintSpeed + 0.5f))
+                dashing = false;
+        }
     }
 
     private bool jumping = false;
@@ -68,28 +137,42 @@ public class PlayerScript : MonoBehaviour
     private const float jumpIncr = .27f;
     private void CheckForJump()
     {
-        if (!jumping && jumpInput.triggered)
+        if (!DoingSomething() && jumpInput.triggered)
         {
+            playerAR.SetFloat("Vertical Speed" , initialJumpVel);
+
             jumping = true;
+            jumpVelocityUpdated = false; //Used to account for physics updates vs frame updates.
+
+            trackedRiseTime = 0f;
             currentJumpVal = initialJumpVel;
         }
     }
-    private Vector2 jumpVelocity = new Vector2(0f , 0f);
-    private void DoJump()
+    private Vector2 velocityForJumping = new Vector2(0f , 0f);
+    private const float allowedAdditionalRiseTime = 0.25f;
+    private float trackedRiseTime;
+    private bool jumpVelocityUpdated = false;
+    private void ExcuteJump()
     {
         if (jumping)
         {
-            currentJumpVal -= jumpIncr;
+            if (!jumpVelocityUpdated)
+                jumpVelocityUpdated = true;
 
-            jumpVelocity.x = playerRB.linearVelocityX;
-            jumpVelocity.y = currentJumpVal;
+            if ((trackedRiseTime < allowedAdditionalRiseTime) && (jumpInput.ReadValue<float>() == 1))
+                trackedRiseTime += Time.deltaTime;
 
-            playerRB.linearVelocity = jumpVelocity;
+            else if ((trackedRiseTime < allowedAdditionalRiseTime) && (jumpInput.ReadValue<float>() == 0))
+                trackedRiseTime = allowedAdditionalRiseTime + 1f;
+
+            else
+                currentJumpVal -= jumpIncr;
+
+            velocityForJumping.x = playerRB.linearVelocityX;
+            velocityForJumping.y = currentJumpVal;
+
+            playerRB.linearVelocity = velocityForJumping;
         }
-    }
-    private void JumpLandingDone() //For animator use only
-    {
-        playerAR.SetBool("Jump Landing Done", true);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -100,19 +183,38 @@ public class PlayerScript : MonoBehaviour
                 jumping = false;
                 playerAR.SetBool("Jumping" , false);
                 playerAR.SetBool("Jump Landing Done" , false);
-
             }
         }
     }
+    private void JumpLandingDone() //For animator use only
+    {
+        playerAR.SetBool("Jump Landing Done" , true);
+    }
+
+    private bool DoingSomething()
+    {
+        if (jumping)
+            return true;
+
+        else if (dashing)
+            return true;
+
+        else 
+            return false;
+    }
+
     private void SetState()
     {
         if (jumping)
             playerState = PlayerState.Jump;
 
-        else if (playerRB.linearVelocityX == 0f)
+        else if (dashing)
+            playerState = PlayerState.Dash;
+
+        else if (Mathf.Abs(playerRB.linearVelocityX) <= 0.01f)
             playerState = PlayerState.Idle;
 
-        else if (Mathf.Abs(playerRB.linearVelocityX) > 0f)
+        else if (Mathf.Abs(playerRB.linearVelocityX) > 0.01f)
             playerState = PlayerState.Sprint;
     }
 
@@ -124,12 +226,25 @@ public class PlayerScript : MonoBehaviour
         else if (playerState == PlayerState.Sprint)
         {
             playerAR.SetBool("Sprinting" , true);
+            playerAR.SetBool("Dashing", false);
+
+            playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
+        }
+
+        else if (playerState == PlayerState.Dash)
+        {
+            playerAR.SetBool("Dashing" , true);
+
             playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
         }
 
         else if (playerState == PlayerState.Jump)
         {
             playerAR.SetBool("Jumping" , true);
+            
+            if (jumpVelocityUpdated)
+                playerAR.SetFloat("Vertical Speed" , playerRB.linearVelocityY);
+            
             playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
         }
     }
