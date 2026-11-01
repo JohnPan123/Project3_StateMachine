@@ -35,6 +35,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Base Attack",
+                    "type": "Button",
+                    "id": "1efd7937-f38f-444a-a72f-876dc26b52b3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -52,7 +62,7 @@
                 {
                     "name": "negative",
                     "id": "5aae3b6e-4222-440f-8e13-bad35a8af00f",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -63,7 +73,7 @@
                 {
                     "name": "positive",
                     "id": "203ced1a-1cac-4661-aa5c-9bc165f3cd0b",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -74,10 +84,10 @@
                 {
                     "name": "",
                     "id": "8fc30c00-a23d-4ed3-9b94-e6b0c65607ef",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Jumping",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -90,6 +100,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "727f1f91-6f41-4f68-aca8-99af3ef00e40",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Base Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -645,39 +666,6 @@
             "devices": [
                 {
                     "devicePath": "<Gamepad>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
-        },
-        {
-            "name": "Touch",
-            "bindingGroup": "Touch",
-            "devices": [
-                {
-                    "devicePath": "<Touchscreen>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
-        },
-        {
-            "name": "Joystick",
-            "bindingGroup": "Joystick",
-            "devices": [
-                {
-                    "devicePath": "<Joystick>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
-        },
-        {
-            "name": "XR",
-            "bindingGroup": "XR",
-            "devices": [
-                {
-                    "devicePath": "<XRController>",
                     "isOptional": false,
                     "isOR": false
                 }
