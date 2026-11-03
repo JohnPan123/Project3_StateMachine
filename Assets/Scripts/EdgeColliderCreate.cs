@@ -16,12 +16,13 @@ public class EdgeColliderCreate : MonoBehaviour
             Vector3 worldPositionOfPointOnSpline = splineContainer.EvaluatePosition((float)pointForEdgeCollider / resolution);
             
             //Debug.DrawRay(worldPositionOfPointOnSpline, Vector2.down, Color.blue , 70f);
-            Debug.Log("World " + worldPositionOfPointOnSpline);
+            //Debug.Log("World " + worldPositionOfPointOnSpline);
             
             Vector2 localPositionOfPointOnSpline = transform.InverseTransformPoint(worldPositionOfPointOnSpline);
-            Debug.Log("Local " + localPositionOfPointOnSpline);
 
-            Debug.DrawRay(transform.position, localPositionOfPointOnSpline, Color.green , 70f);
+
+            //Debug.Log("Local " + localPositionOfPointOnSpline);
+            //Debug.DrawRay(transform.position, localPositionOfPointOnSpline, Color.green , 70f);
 
             localPointPositions.Add(localPositionOfPointOnSpline);
         }

@@ -14,7 +14,10 @@ public class PlayerScript : MonoBehaviour
     private SpriteRenderer playerSR;
 
     [SerializeField] private int groundLayerInt;
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private int platformLayerInt;
+    [SerializeField] private int islandLayerInt;
+    [SerializeField] private int islandUnderPartLayer;
+    [SerializeField] private LayerMask landingLayers;
     private PlayerState playerState;
     private enum PlayerState
     {
@@ -111,6 +114,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     private bool jumping = false;
+    private bool jumpVelocityUpdated = false; //Used to account for physics updates and frame update offsets.
     private const float initialJumpVel = 5f;
     private float currentJumpVal;
     private void CheckForJump()
@@ -118,9 +122,9 @@ public class PlayerScript : MonoBehaviour
         if (!DoingSomething() && jumpInput.triggered)
         {
             playerAR.SetFloat("Vertical Speed" , initialJumpVel);
-
+            
             jumping = true;
-            jumpVelocityUpdated = false; //Used to account for physics updates and frame update offsets.
+            jumpVelocityUpdated = false;
 
             trackedRiseTime = 0f;
             currentJumpVal = initialJumpVel;
@@ -130,7 +134,6 @@ public class PlayerScript : MonoBehaviour
     private const float allowedAdditionalRiseTime = 0.25f;
     private const float jumpIncr = .35f;
     private float trackedRiseTime;
-    private bool jumpVelocityUpdated = false;
     private void ExecuteJump()
     {
         if (jumping)
@@ -154,18 +157,24 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private bool onGround = false;
+    private GameObject onCollisionEnterGameObject;
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == groundLayerInt)
+        onCollisionEnterGameObject = collision.gameObject;
+
+        if (onCollisionEnterGameObject.layer == groundLayerInt || onCollisionEnterGameObject.layer == platformLayerInt ||
+            onCollisionEnterGameObject.layer == islandLayerInt)
         {
             if (jumping)
             {
                 jumping = false;
-                playerAR.SetBool("Jumping" , false);
-                playerAR.SetBool("Jump Landing Done" , false);
+                playerAR.SetBool("Jumping", false);
+                playerAR.SetBool("Jump Landing Done", false);
             }
         }
+        
+        else if (onCollisionEnterGameObject.layer == islandUnderPartLayer)
+            currentJumpVal = 0f;
     }
 
     private void JumpLandingDone() //For animator use only
@@ -181,9 +190,10 @@ public class PlayerScript : MonoBehaviour
     private void ExecuteGravity()
     {
         //Debug.DrawRay(transform.position + playerWidthOffset, Vector2.down * drawDistance , Color.red);
-        if ((Physics2D.Raycast(transform.position + playerWidthOffset , Vector2.down, drawDistance , groundLayer).collider != null) || 
-            (Physics2D.Raycast(transform.position - playerWidthOffset , Vector2.down, drawDistance , groundLayer).collider != null))
-                playerRB.linearVelocity += onGroundVelocityDueToGravity;
+        if ((Physics2D.Raycast(transform.position + playerWidthOffset , Vector2.down, drawDistance , landingLayers).collider != null) || 
+            (Physics2D.Raycast(transform.position - playerWidthOffset , Vector2.down, drawDistance , landingLayers).collider != null))
+            playerRB.linearVelocity += onGroundVelocityDueToGravity;
+        
         else
             playerRB.linearVelocity += (velocityDueToGravity * gravityMulitplier);
 
@@ -267,6 +277,9 @@ public class PlayerScript : MonoBehaviour
 
     private void StateEffects()
     {
+        if (jumpVelocityUpdated)
+            playerAR.SetFloat("Vertical Speed", playerRB.linearVelocityY);
+
         if (playerState == PlayerState.Idle)
         {
             playerAR.SetBool("Sprinting", false);
@@ -278,31 +291,33 @@ public class PlayerScript : MonoBehaviour
         {
             playerAR.SetBool("Sprinting" , true);
             playerAR.SetBool("Dashing", false);
-
-            playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
         }
 
         else if (playerState == PlayerState.Dash)
         {
             playerAR.SetBool("Dashing" , true);
-
-            playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
         }
 
         else if (playerState == PlayerState.Jump)
         {
             playerAR.SetBool("Jumping" , true);
-            
-            if (jumpVelocityUpdated)
-                playerAR.SetFloat("Vertical Speed" , playerRB.linearVelocityY);
-            
-            playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
         }
 
         else if (playerState == PlayerState.Attack)
         {
             playerAR.SetBool("Attacking" , true);
         }
+
+        DirectionSetting();
+    }
+
+    private void DirectionSetting()
+    {
+        if (Mathf.Abs(playerRB.linearVelocityX) <= 0.01f)
+            playerSR.flipX = playerSR.flipX;
+        else
+            playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
+
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }
