@@ -4,11 +4,13 @@ public class DemonScript : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer;
 
+    [SerializeField] private BoxCollider2D attackBreathCollider;
+
     private GameObject player;
 
-    private BoxCollider2D attackBreathCollider;
     private SpriteRenderer demonSR;
     private Animator demonAR;
+
     private DemonStates demonState;
     private enum MoveStates
     {
@@ -30,7 +32,6 @@ public class DemonScript : MonoBehaviour
 
         demonAR = GetComponent<Animator>();
         demonSR = GetComponent<SpriteRenderer>();
-        attackBreathCollider = GetComponent<BoxCollider2D>();
 
         attackBreathCollider.enabled = false;
         demonState = DemonStates.Idle;
