@@ -248,6 +248,9 @@ public class PlayerScript : MonoBehaviour
             playerRB.linearVelocity = attackingVelocity;
     }
     //--------------------------------------------------| ATTACKING FUNCTIONS
+    //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
+
+    //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     private bool DoingSomething()
     {

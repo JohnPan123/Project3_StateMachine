@@ -3,11 +3,9 @@ using UnityEngine;
 public class DemonScript : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer;
-
     [SerializeField] private BoxCollider2D attackBreathCollider;
 
     private GameObject player;
-
     private SpriteRenderer demonSR;
     private Animator demonAR;
 
@@ -96,9 +94,8 @@ public class DemonScript : MonoBehaviour
 
         else if (attacking)
         {
-            if (!attackBreathCollider.enabled)
+            if (!attackBreathCollider.enabled && demonAR.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Demon Attack Breath")
                 attackBreathCollider.enabled = true;
-
 
             if (transform.position.x < player.transform.position.x)
             {
