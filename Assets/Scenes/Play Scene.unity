@@ -707,6 +707,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 414638409}
+  - component: {fileID: 414638411}
   - component: {fileID: 414638410}
   m_Layer: 11
   m_Name: Attack Hit Box Three
@@ -737,7 +738,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414638408}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -764,7 +765,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.18, y: -0.06}
+  m_Offset: {x: 0.18769166, y: -0.005127795}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -774,8 +775,20 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.19, y: 0.3}
+  m_Size: {x: 0.20512766, y: 0.43588603}
   m_EdgeRadius: 0
+--- !u!114 &414638411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414638408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0184eb8ad403c8d4c8752b1434e9e18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHitBoxScript
 --- !u!1 &444420998
 GameObject:
   m_ObjectHideFlags: 0
@@ -1626,6 +1639,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 547128648}
+  - component: {fileID: 547128650}
   - component: {fileID: 547128649}
   m_Layer: 11
   m_Name: Attack Hit Box Two
@@ -1656,7 +1670,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 547128647}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -1683,7 +1697,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.18, y: -0.09}
+  m_Offset: {x: 0.20051111, y: -0.09255633}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1693,8 +1707,20 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.19, y: 0.16}
+  m_Size: {x: 0.23102221, y: 0.19897106}
   m_EdgeRadius: 0
+--- !u!114 &547128650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 547128647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0184eb8ad403c8d4c8752b1434e9e18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHitBoxScript
 --- !u!1 &554644353
 GameObject:
   m_ObjectHideFlags: 0
@@ -1704,6 +1730,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 554644354}
+  - component: {fileID: 554644356}
   - component: {fileID: 554644355}
   m_Layer: 11
   m_Name: Attack Hit Box One
@@ -1734,7 +1761,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554644353}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -1761,7 +1788,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.18, y: -0.06}
+  m_Offset: {x: 0.18, y: -0.037176378}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1771,8 +1798,20 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.19, y: 0.3}
+  m_Size: {x: 0.19, y: 0.37178886}
   m_EdgeRadius: 0
+--- !u!114 &554644356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554644353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0184eb8ad403c8d4c8752b1434e9e18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHitBoxScript
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3471,6 +3510,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a3d918048ac074b90d479baa72af85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
+  attackHitBoxes:
+  - {fileID: 554644355}
+  - {fileID: 547128649}
+  - {fileID: 414638410}
   groundLayerInt: 6
   platformLayerInt: 7
   islandLayerInt: 8

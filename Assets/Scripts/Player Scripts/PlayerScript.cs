@@ -1,7 +1,6 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -15,6 +14,8 @@ public class PlayerScript : MonoBehaviour
     private SpriteRenderer playerSR;
 
     private float playerHealth = 100f;
+
+    [SerializeField] private List<BoxCollider2D> attackHitBoxes;
 
     [SerializeField] private int groundLayerInt;
     [SerializeField] private int platformLayerInt;
@@ -249,7 +250,14 @@ public class PlayerScript : MonoBehaviour
     }
     //--------------------------------------------------| ATTACKING FUNCTIONS
     //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
-
+    private void AttackHitBoxActivation()
+    {
+        Debug.Log(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+    }
+    private void AttackHitBoxDeactivation()
+    {
+        Debug.Log(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+    }
     //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     private bool DoingSomething()
@@ -330,12 +338,39 @@ public class PlayerScript : MonoBehaviour
         DirectionSetting();
     }
 
+    private Vector2 attackHitBoxDirectioning = new Vector2(0 , 0);
     private void DirectionSetting()
     {
         if (Mathf.Abs(playerRB.linearVelocityX) <= 0.01f)
+        {
             playerSR.flipX = playerSR.flipX;
+        }
         else
+        {
             playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
+
+            if (playerSR.flipX)
+            {
+                foreach (BoxCollider2D box in attackHitBoxes)
+                {
+                    attackHitBoxDirectioning.x = -1 * Mathf.Abs(box.offset.x);
+                    attackHitBoxDirectioning.y = -1 * Mathf.Abs(box.offset.y);
+
+                    box.offset = attackHitBoxDirectioning;
+                }
+            }
+
+            else
+            {
+                foreach (BoxCollider2D box in attackHitBoxes)
+                {
+                    attackHitBoxDirectioning.x = Mathf.Abs(box.offset.x);
+                    attackHitBoxDirectioning.y = Mathf.Abs(box.offset.y);
+
+                    box.offset = attackHitBoxDirectioning;
+                }
+            }
+        }
 
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
