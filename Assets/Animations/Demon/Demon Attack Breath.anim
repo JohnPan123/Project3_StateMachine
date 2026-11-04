@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Demon_AttackBreath
+  m_Name: Demon Attack Breath
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,41 +21,25 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 4093529123795720158, guid: 7185bccbb77599d4bb09ccf8eada4015, type: 3}
-    - time: 0.1
-      value: {fileID: -3218644999118768396, guid: b1cc17cb2303d634e982d255a788f812, type: 3}
-    - time: 0.21666667
-      value: {fileID: 1177578112082225661, guid: 682c2726ff62ae34199ad42602173909, type: 3}
-    - time: 0.31666666
-      value: {fileID: 1563620848058282944, guid: 68287eaccb558484aa684f081c20a253, type: 3}
-    - time: 0.43333334
-      value: {fileID: -587994349203448363, guid: 5ef366e67a6495044aec06878ed28c22, type: 3}
-    - time: 0.53333336
-      value: {fileID: 4136386825969600437, guid: fd6f87d068532cc489f88c17ef5e0ae7, type: 3}
-    - time: 0.6333333
-      value: {fileID: 1470945917793084647, guid: 221fa351b7d6283458c4dda25eb473f0, type: 3}
-    - time: 0.75
       value: {fileID: -5292024041255903019, guid: 6d9f030842b4c4a43b38cdccd262ab00, type: 3}
-    - time: 0.85
+    - time: 0.1
       value: {fileID: -5348726025770752661, guid: fec9add2949a07c47a8c5cb10cdc55b8, type: 3}
-    - time: 0.96666664
+    - time: 0.21666667
       value: {fileID: -8689684643704825844, guid: 3c14e940ff29b484c9da806f40dfc8ba, type: 3}
-    - time: 1.0666667
+    - time: 0.31666666
       value: {fileID: -2789226179555748386, guid: 7e1d33ab8d4a9644482e27c50e6af890, type: 3}
-    - time: 1.1833333
+    - time: 0.43333334
       value: {fileID: 7003977830787390241, guid: bb8d2866567f9024192cce7599f5d2c9, type: 3}
-    - time: 1.2833333
+    - time: 0.53333336
       value: {fileID: 2984128667029136502, guid: cb1824cf18e88c44f9792614b653adc1, type: 3}
-    - time: 1.3833333
+    - time: 0.6333333
       value: {fileID: -4556895449485390670, guid: f9d0b6dee8f33a7418c67e1ec9adaa9d, type: 3}
-    - time: 1.5
+    - time: 0.75
       value: {fileID: 8457942971619043715, guid: b47dc126d811b0641917007cf274fc78, type: 3}
-    - time: 1.6
+    - time: 0.85
       value: {fileID: -7948416920724082719, guid: d0db5fa6c2b68c543b560dfaab5e9865, type: 3}
-    - time: 1.7166667
+    - time: 0.96666664
       value: {fileID: 5605631001991447046, guid: 3da7fb3785ea2c140a861e7899be7a4e, type: 3}
-    - time: 1.8166667
-      value: {fileID: -6827601628516834517, guid: 657ce07cd8987834094a0d8f72b4ce2b, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -78,13 +62,6 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 4093529123795720158, guid: 7185bccbb77599d4bb09ccf8eada4015, type: 3}
-    - {fileID: -3218644999118768396, guid: b1cc17cb2303d634e982d255a788f812, type: 3}
-    - {fileID: 1177578112082225661, guid: 682c2726ff62ae34199ad42602173909, type: 3}
-    - {fileID: 1563620848058282944, guid: 68287eaccb558484aa684f081c20a253, type: 3}
-    - {fileID: -587994349203448363, guid: 5ef366e67a6495044aec06878ed28c22, type: 3}
-    - {fileID: 4136386825969600437, guid: fd6f87d068532cc489f88c17ef5e0ae7, type: 3}
-    - {fileID: 1470945917793084647, guid: 221fa351b7d6283458c4dda25eb473f0, type: 3}
     - {fileID: -5292024041255903019, guid: 6d9f030842b4c4a43b38cdccd262ab00, type: 3}
     - {fileID: -5348726025770752661, guid: fec9add2949a07c47a8c5cb10cdc55b8, type: 3}
     - {fileID: -8689684643704825844, guid: 3c14e940ff29b484c9da806f40dfc8ba, type: 3}
@@ -95,13 +72,12 @@ AnimationClip:
     - {fileID: 8457942971619043715, guid: b47dc126d811b0641917007cf274fc78, type: 3}
     - {fileID: -7948416920724082719, guid: d0db5fa6c2b68c543b560dfaab5e9865, type: 3}
     - {fileID: 5605631001991447046, guid: 3da7fb3785ea2c140a861e7899be7a4e, type: 3}
-    - {fileID: -6827601628516834517, guid: 657ce07cd8987834094a0d8f72b4ce2b, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1.8333334
+    m_StopTime: 0.9833333
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

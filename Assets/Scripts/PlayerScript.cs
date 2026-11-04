@@ -14,6 +14,8 @@ public class PlayerScript : MonoBehaviour
     private Animator playerAR;
     private SpriteRenderer playerSR;
 
+    private float playerHealth = 100f;
+
     [SerializeField] private int groundLayerInt;
     [SerializeField] private int platformLayerInt;
     [SerializeField] private int islandLayerInt;
@@ -22,7 +24,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private LayerMask landingLayers;
     
     private PlayerState playerState;
-    
+    public static string playerName;
     private enum PlayerState
     {
         Idle = 0,
@@ -43,6 +45,7 @@ public class PlayerScript : MonoBehaviour
         playerAR = GetComponent<Animator>();
         playerSR = GetComponent<SpriteRenderer>();
 
+        playerName = gameObject.name;
         playerState = PlayerState.Idle;
     }
     private void FixedUpdate()
@@ -245,7 +248,7 @@ public class PlayerScript : MonoBehaviour
             playerRB.linearVelocity = attackingVelocity;
     }
     //--------------------------------------------------| ATTACKING FUNCTIONS
-    //--------------------------------------------------|  
+    //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     private bool DoingSomething()
     {
         if (jumping)
@@ -260,7 +263,15 @@ public class PlayerScript : MonoBehaviour
         else
             return false;
     }
-    //--------------------------------------------------|  
+    //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
+    //--------------------------------------------------|  PLAYER HEALTH FUNCTIONS
+    public void HealthLost(float healthLost)
+    {
+        playerHealth -= healthLost;
+    }
+
+    public float GetPlayerHealth => playerHealth;
+    //--------------------------------------------------| PLAYER HEALTH FUNCTIONS
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void SetState()
     {
@@ -282,8 +293,6 @@ public class PlayerScript : MonoBehaviour
 
     private void StateEffects()
     {
-        Debug.Log(playerAR.GetFloat("Vertical Speed"));
-
         if (jumpVelocityUpdated)
             playerAR.SetFloat("Vertical Speed", playerRB.linearVelocityY);
 

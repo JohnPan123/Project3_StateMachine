@@ -3,6 +3,10 @@ using UnityEngine;
 public class DemonScript : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer;
+
+    private GameObject player;
+
+    private BoxCollider2D attackBreathCollider;
     private SpriteRenderer demonSR;
     private Animator demonAR;
     private DemonStates demonState;
@@ -22,55 +26,97 @@ public class DemonScript : MonoBehaviour
     }
     void Start()
     {
+        player = GameObject.Find(PlayerScript.playerName);
+
         demonAR = GetComponent<Animator>();
         demonSR = GetComponent<SpriteRenderer>();
+        attackBreathCollider = GetComponent<BoxCollider2D>();
 
+        attackBreathCollider.enabled = false;
         demonState = DemonStates.Idle;
     }
 
     void Update()
     {
-        if (!attacking)
-            DemonMove();
+        DemonMove();
         
-        DemonDetectAttack();
+        if (!attacking)
+            DemonDetectAttack();
 
         SetState();
         StateEffects();
     }
+
+    //--------------------------------------------------| MOVEMENT FUNCTIONS
     private const float demonSpeed = 3.5f;
+    private const float demonAttackSpeed = 4.5f;
+
     private Vector3 moveVector = new Vector3(demonSpeed , 0f , 0f);
+    private Vector3 leftAttackOffset = new Vector3(-0.5f, 0.5f, 0);
+    private Vector3 rightAttackOffset = new Vector3(0.5f , 0.5f , 0);
+
     private float timeToChangeMove = 1f;
     private float timeTillMoveChange = 0f;
+
     private MoveStates moveState = MoveStates.Idle;
     private void DemonMove()
     {
-        timeTillMoveChange += Time.deltaTime;
-
-        if (timeTillMoveChange >= timeToChangeMove)
+        if (!attacking)
         {
-            if (((int)moveState + 1) == 4)
-                moveState = MoveStates.Idle;
+            if (attackBreathCollider.enabled)
+                attackBreathCollider.enabled = false;
+
+            timeTillMoveChange += Time.deltaTime;
+
+            if (timeTillMoveChange >= timeToChangeMove)
+            {
+                if (((int)moveState + 1) == 4)
+                    moveState = MoveStates.Idle;
+                else
+                    moveState++;
+
+                timeTillMoveChange = 0f;
+            }
+
+            switch (moveState)
+            {
+                case MoveStates.Idle:
+                    break;
+                case MoveStates.MoveLeft:
+                    transform.Translate(-moveVector * Time.deltaTime);
+                    break;
+                case MoveStates.IdleTwo:
+                    break;
+                case MoveStates.MoveRight:
+                    transform.Translate(moveVector * Time.deltaTime);
+                    break;
+            }
+        }
+
+        else if (attacking)
+        {
+            if (!attackBreathCollider.enabled)
+                attackBreathCollider.enabled = true;
+
+
+            if (transform.position.x < player.transform.position.x)
+            {
+                moveVector = (player.transform.position - transform.position + leftAttackOffset).normalized;
+                moveState = MoveStates.MoveRight;
+            }
             else
-                moveState++;
+            {
+                moveVector = (player.transform.position - transform.position + rightAttackOffset).normalized;
+                moveState = MoveStates.MoveLeft;
+            }
 
-            timeTillMoveChange = 0f;
+            transform.Translate(moveVector * demonAttackSpeed * Time.deltaTime);
         }
 
-        switch (moveState)
-        {
-            case MoveStates.Idle:
-                break;
-            case MoveStates.MoveLeft:
-                transform.Translate(-moveVector * Time.deltaTime);
-                break;
-            case MoveStates.IdleTwo:
-                break;
-            case MoveStates.MoveRight:
-                transform.Translate(moveVector * Time.deltaTime);
-                break;
-        }
     }
+    //--------------------------------------------------| MOVEMENT FUNCTIONS
+    //--------------------------------------------------| ATTACKING FUNCTIONS
+
     private const float verticalViewRange = 1f;
     private const float horizontalViewRange = 3f;
     private Vector2 rayDirection = new Vector2(0 , 0);
@@ -89,18 +135,17 @@ public class DemonScript : MonoBehaviour
             }
         }
     }
+    //--------------------------------------------------| ATTACKING FUNCTIONS
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void SetState()
     {
         if (attacking)
             demonState = DemonStates.BreathAttack;
-        else
-        {
-            if (moveState == MoveStates.MoveLeft)
-                demonSR.flipX = false;
-            else if (moveState == MoveStates.MoveRight)
-                demonSR.flipX = true;
-        }
+
+        if (moveState == MoveStates.MoveLeft)
+            demonSR.flipX = false;
+        else if (moveState == MoveStates.MoveRight)
+            demonSR.flipX = true;
     }
 
     private void StateEffects()
