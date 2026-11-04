@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,8 +18,11 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private int platformLayerInt;
     [SerializeField] private int islandLayerInt;
     [SerializeField] private int islandUnderPartLayer;
+    
     [SerializeField] private LayerMask landingLayers;
+    
     private PlayerState playerState;
+    
     private enum PlayerState
     {
         Idle = 0,
@@ -27,6 +31,7 @@ public class PlayerScript : MonoBehaviour
         Dash = 3,
         Attack = 4
     }
+
     void Start()
     {
         horizontalMovementInput = InputSystem.actions.FindAction("Horizontal Movement");
@@ -68,7 +73,6 @@ public class PlayerScript : MonoBehaviour
 
         if (Mathf.Abs(horizontalMovement) > 0)
             velocity.x = sprintSpeed * horizontalMovement;
-
         else
             velocity.x = 0f;
 
@@ -165,7 +169,10 @@ public class PlayerScript : MonoBehaviour
         if (onCollisionEnterGameObject.layer == groundLayerInt || onCollisionEnterGameObject.layer == platformLayerInt ||
             onCollisionEnterGameObject.layer == islandLayerInt)
         {
-            if (jumping)
+            if (jumping && (currentJumpVal != 5f))
+            //If I did not have the second check (currentJumpVal != 5f),
+            //sometimes the game would have a collision the same frame jump began
+            //and abruptly cut it off. This second check fixed it.
             {
                 jumping = false;
                 playerAR.SetBool("Jumping", false);
@@ -193,10 +200,8 @@ public class PlayerScript : MonoBehaviour
         if ((Physics2D.Raycast(transform.position + playerWidthOffset , Vector2.down, drawDistance , landingLayers).collider != null) || 
             (Physics2D.Raycast(transform.position - playerWidthOffset , Vector2.down, drawDistance , landingLayers).collider != null))
             playerRB.linearVelocity += onGroundVelocityDueToGravity;
-        
         else
             playerRB.linearVelocity += (velocityDueToGravity * gravityMulitplier);
-
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACKING FUNCTIONS
