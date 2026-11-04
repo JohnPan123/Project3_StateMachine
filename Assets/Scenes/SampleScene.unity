@@ -1345,7 +1345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8412945931219453669, guid: 067d4a25b8a3ea246af3b3f7e6b7029e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.13
+      value: 16.75
       objectReference: {fileID: 0}
     - target: {fileID: 8412945931219453669, guid: 067d4a25b8a3ea246af3b3f7e6b7029e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2421,7 +2421,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0
   m_GravityScale: 0
-  m_Material: {fileID: 6200000, guid: 4e84949514be78f4f83050b3acd11084, type: 2}
+  m_Material: {fileID: 6200000, guid: 1e98e86d8c9136746a3309b850f15da6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

@@ -282,6 +282,8 @@ public class PlayerScript : MonoBehaviour
 
     private void StateEffects()
     {
+        Debug.Log(playerAR.GetFloat("Vertical Speed"));
+
         if (jumpVelocityUpdated)
             playerAR.SetFloat("Vertical Speed", playerRB.linearVelocityY);
 
