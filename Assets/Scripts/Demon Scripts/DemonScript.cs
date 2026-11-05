@@ -9,6 +9,7 @@ public class DemonScript : MonoBehaviour
     private SpriteRenderer demonSR;
     private Animator demonAR;
 
+    private int demonHealth = 3;
     private DemonStates demonState;
     private enum MoveStates
     {
@@ -21,7 +22,7 @@ public class DemonScript : MonoBehaviour
     {
         Idle = 0,
         Move = 1,
-        SpecialAttack = 2,
+        Death = 2,
         BreathAttack = 3
     }
     void Start()
@@ -54,13 +55,15 @@ public class DemonScript : MonoBehaviour
     private Vector3 leftAttackOffset = new Vector3(-0.5f, 0.5f, 0);
     private Vector3 rightAttackOffset = new Vector3(0.5f , 0.5f , 0);
 
-    private float timeToChangeMove = 1f;
+    [SerializeField] private float timeToChangeMove = 1f;
     private float timeTillMoveChange = 0f;
 
     private MoveStates moveState = MoveStates.Idle;
     private void DemonMove()
     {
-        if (!attacking)
+        if (dead) ;
+        
+        else if (!attacking)
         {
             if (attackBreathCollider.enabled)
                 attackBreathCollider.enabled = false;
@@ -134,10 +137,37 @@ public class DemonScript : MonoBehaviour
         }
     }
     //--------------------------------------------------| ATTACKING FUNCTIONS
+    //--------------------------------------------------| HEALTH FUNCTIONS
+    private bool dead = false;
+    private Vector2 deathSpriteOffset = new Vector2(0.7f , 0);
+    public void LoseHealth(int healthLost)
+    {
+        demonHealth -= healthLost;
+
+        if (demonHealth <= 0)
+        {
+            if (moveState == MoveStates.MoveLeft)
+                transform.Translate(deathSpriteOffset);
+            else if (moveState == MoveStates.MoveRight)
+                transform.Translate(-deathSpriteOffset);
+
+            attackBreathCollider.enabled = false;
+            dead = true;
+            attacking = false;
+        }
+    }
+
+    private void Death()
+    {
+        Destroy(gameObject);
+    }
+    //--------------------------------------------------| HEALTH FUNCTIONS
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void SetState()
     {
-        if (attacking)
+        if (dead)
+            demonState = DemonStates.Death;
+        else if (attacking)
             demonState = DemonStates.BreathAttack;
 
         if (moveState == MoveStates.MoveLeft)
@@ -150,6 +180,9 @@ public class DemonScript : MonoBehaviour
     {
         if (demonState == DemonStates.BreathAttack)
             demonAR.SetBool("Attacking" , true);
+
+        else if (demonState == DemonStates.Death)
+            demonAR.SetBool("Dead" , true);
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }

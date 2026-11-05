@@ -709,7 +709,7 @@ GameObject:
   - component: {fileID: 414638409}
   - component: {fileID: 414638411}
   - component: {fileID: 414638410}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Attack Hit Box Three
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1641,7 +1641,7 @@ GameObject:
   - component: {fileID: 547128648}
   - component: {fileID: 547128650}
   - component: {fileID: 547128649}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Attack Hit Box Two
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1732,7 +1732,7 @@ GameObject:
   - component: {fileID: 554644354}
   - component: {fileID: 554644356}
   - component: {fileID: 554644355}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Attack Hit Box One
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2037,6 +2037,10 @@ PrefabInstance:
     - target: {fileID: -922493492498692555, guid: 067d4a25b8a3ea246af3b3f7e6b7029e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 1.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 2578371063143498808, guid: 067d4a25b8a3ea246af3b3f7e6b7029e, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7262163631973018844, guid: 067d4a25b8a3ea246af3b3f7e6b7029e, type: 3}
       propertyPath: m_Name
