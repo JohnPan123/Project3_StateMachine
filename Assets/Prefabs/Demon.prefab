@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2524002635088458197}
   - component: {fileID: 5459667807824680441}
   - component: {fileID: 7392221522276097450}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Attack Hit Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,6 +203,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   attackBreathCollider: {fileID: 7392221522276097450}
+  timeToChangeMove: 1
 --- !u!70 &2534523176075248551
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
