@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MushroomScript : MonsterScript
 {
+    private BaseMoveStates moveState;
+    private MushroomStates mushroomState;
     private enum BaseMoveStates
     {
         Idle = 0,
@@ -22,6 +24,9 @@ public class MushroomScript : MonsterScript
 
         monsterAR = GetComponent<Animator>();
         monsterSR = GetComponent<SpriteRenderer>();
+
+        mushroomState = MushroomStates.Idle;
+        moveState = BaseMoveStates.Idle;
     }
 
     void Update()
