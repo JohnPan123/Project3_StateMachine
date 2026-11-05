@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -16,13 +17,8 @@ public class PlayerScript : MonoBehaviour
     private float playerHealth = 100f;
 
     [SerializeField] private List<BoxCollider2D> attackHitBoxes;
-
-    [SerializeField] private int groundLayerInt;
-    [SerializeField] private int platformLayerInt;
-    [SerializeField] private int islandLayerInt;
-    [SerializeField] private int islandUnderPartLayer;
-    
-    [SerializeField] private LayerMask landingLayers;
+    private Dictionary<string, int> landingLayersDict = new Dictionary<string , int>();
+    [SerializeField] private LayerMask landingLayersMask;
     
     private PlayerState playerState;
     public static string playerName;
@@ -41,6 +37,11 @@ public class PlayerScript : MonoBehaviour
         dashInput = InputSystem.actions.FindAction("Dash");
         jumpInput = InputSystem.actions.FindAction("Jumping");
         attackInput = InputSystem.actions.FindAction("Base Attack");
+
+        landingLayersDict.Add("Ground Layer" , LayerMask.NameToLayer("Ground"));
+        landingLayersDict.Add("Platform Layer" , LayerMask.NameToLayer("Platform"));
+        landingLayersDict.Add("Island Layer", LayerMask.NameToLayer("Island"));
+        landingLayersDict.Add("Island Under Layer" , LayerMask.NameToLayer("IslandUnderPart"));
 
         playerRB = GetComponent<Rigidbody2D>();
         playerAR = GetComponent<Animator>();
@@ -170,8 +171,8 @@ public class PlayerScript : MonoBehaviour
     {
         onCollisionEnterGameObject = collision.gameObject;
 
-        if (onCollisionEnterGameObject.layer == groundLayerInt || onCollisionEnterGameObject.layer == platformLayerInt ||
-            onCollisionEnterGameObject.layer == islandLayerInt)
+        if (onCollisionEnterGameObject.layer == landingLayersDict["Ground Layer"] || onCollisionEnterGameObject.layer == landingLayersDict["Platform Layer"] ||
+            onCollisionEnterGameObject.layer == landingLayersDict["Island Layer"])
         {
             if (jumping && (currentJumpVal != 5f))
             //If I did not have the second check (currentJumpVal != 5f),
@@ -184,7 +185,7 @@ public class PlayerScript : MonoBehaviour
             }
         }
         
-        else if (onCollisionEnterGameObject.layer == islandUnderPartLayer)
+        else if (onCollisionEnterGameObject.layer == landingLayersDict["Island Under Layer"])
             currentJumpVal = 0f;
     }
 
@@ -201,8 +202,8 @@ public class PlayerScript : MonoBehaviour
     private void ExecuteGravity()
     {
         //Debug.DrawRay(transform.position + playerWidthOffset, Vector2.down * drawDistance , Color.red);
-        if ((Physics2D.Raycast(transform.position + playerWidthOffset , Vector2.down, drawDistance , landingLayers).collider != null) || 
-            (Physics2D.Raycast(transform.position - playerWidthOffset , Vector2.down, drawDistance , landingLayers).collider != null))
+        if ((Physics2D.Raycast(transform.position + playerWidthOffset , Vector2.down, drawDistance , landingLayersMask).collider != null) || 
+            (Physics2D.Raycast(transform.position - playerWidthOffset , Vector2.down, drawDistance , landingLayersMask).collider != null))
             playerRB.linearVelocity += onGroundVelocityDueToGravity;
         else
             playerRB.linearVelocity += (velocityDueToGravity * gravityMulitplier);
@@ -250,13 +251,18 @@ public class PlayerScript : MonoBehaviour
     }
     //--------------------------------------------------| ATTACKING FUNCTIONS
     //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
-    private void AttackHitBoxActivation()
+    private const int locationOfHitBoxNumber = 12; //The names for the base attacks are all Base Attack n.
+    private int hitBox = 0;
+    private void BaseAttackHitBoxActivation()
     {
-        Debug.Log(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+        hitBox = int.Parse(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name.Substring(locationOfHitBoxNumber));
+        //The minus one is needed for the array indexing which starts at zero. The first attack is base attack 1 and that
+        //refers to the second hit box in array indexing.
+        attackHitBoxes[hitBox - 1].enabled = true;
     }
-    private void AttackHitBoxDeactivation()
+    private void BaseAttackHitBoxDeactivation()
     {
-        Debug.Log(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+        attackHitBoxes[hitBox - 1].enabled = false;
     }
     //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
