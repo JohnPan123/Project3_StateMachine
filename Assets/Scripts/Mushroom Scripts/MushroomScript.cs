@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MushroomScript : MonsterScript
 {
+    private Rigidbody2D mushroomRB;
     private BaseMoveStates moveState;
     private MushroomStates mushroomState;
     private enum BaseMoveStates
@@ -25,19 +27,34 @@ public class MushroomScript : MonsterScript
 
         monsterAR = GetComponent<Animator>();
         monsterSR = GetComponent<SpriteRenderer>();
+        mushroomRB = GetComponent<Rigidbody2D>();
 
         mushroomState = MushroomStates.Idle;
         moveState = BaseMoveStates.Idle;
     }
 
+    private void FixedUpdate()
+    {
+        MushroomMove();
+    }
     void Update()
     {
-        MonsterBaseMove();
+        MonsterDetectAttack();
 
         SetState();
         StateEffects();
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
+    private void MushroomMove()
+    {
+        if (attackMove)
+            MonsterAttackMove();
+
+        else
+            MonsterBaseMove();
+    }
+
+
                                 private Vector3 moveVector = new Vector3(monsterSpeed , 0f , 0f);
                                 private const float monsterSpeed = 3.5f;
                                 [SerializeField] private float timeToChangeMove = 1f;
@@ -50,6 +67,7 @@ public class MushroomScript : MonsterScript
         {
             if (((int)moveState + 1) == 4)
                 moveState = BaseMoveStates.Idle;
+
             else
                 moveState++;
 
@@ -59,29 +77,69 @@ public class MushroomScript : MonsterScript
         switch (moveState)
         {
             case BaseMoveStates.Idle:
+                mushroomRB.linearVelocity = Vector2.zero;
                 break;
             case BaseMoveStates.MoveLeft:
-                transform.Translate(-moveVector * Time.deltaTime);
+                mushroomRB.linearVelocity = -moveVector;
                 break;
             case BaseMoveStates.IdleTwo:
+                mushroomRB.linearVelocity = Vector2.zero;
+
                 break;
             case BaseMoveStates.MoveRight:
-                transform.Translate(moveVector * Time.deltaTime);
+                mushroomRB.linearVelocity = moveVector;
                 break;
         }
     }
 
-    private bool attackMove = false;
+
+                                private bool attacking = false;
+                                private Vector3 moveVectorAttack = new Vector3(0 , 0 , 0);
+                                private const float demonAttackSpeed = 4.5f;
     protected override void MonsterAttackMove()
     {
-        throw new System.NotImplementedException();
+        if (transform.position.x <= player.transform.position.x)
+        {
+            moveVectorAttack.x = demonAttackSpeed;
+            moveVectorAttack.y = mushroomRB.linearVelocityY;
+
+            mushroomRB.linearVelocity = (Vector2)moveVectorAttack;
+            moveState = BaseMoveStates.MoveRight;
+        }
+
+        else if (transform.position.x > player.transform.position.x)
+        {
+            moveVectorAttack.x = -demonAttackSpeed;
+            moveVectorAttack.y = mushroomRB.linearVelocityY;
+
+            mushroomRB.linearVelocity = (Vector2)moveVectorAttack;
+            moveState = BaseMoveStates.MoveLeft;
+        }
+    }
+
+    private void ExecuteAttack()
+    {
+
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACK FUNCTIONS
-    private bool attacking = false;
+                                private const float verticalViewRange = 1f;
+                                private const float horizontalViewRange = 3f;
+                                private Vector2 rayDirection = new Vector2(0, 0);
+                                private bool attackMove = false;
     protected override void MonsterDetectAttack()
     {
-        throw new System.NotImplementedException();
+        for (float verticalComponenet = 0f; verticalComponenet <= verticalViewRange; verticalComponenet += 0.2f)
+        {
+            rayDirection.x = (monsterSR.flipX ? 1 : -1) * horizontalViewRange;
+            rayDirection.y = verticalComponenet;
+
+            if (Physics2D.Raycast(transform.position, rayDirection, rayDirection.magnitude, playerLayer))
+            {
+                attackMove = true;
+                break;
+            }
+        }
     }
     //--------------------------------------------------| ATTACK FUNCTIONS
     //--------------------------------------------------| HEALTH FUNCTIONS
@@ -99,17 +157,12 @@ public class MushroomScript : MonsterScript
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     protected override void SetState()
     {
+        DirectionSetting();
+
         if (dead)
             mushroomState = MushroomStates.Death;
         else if (attackMove)
             mushroomState = MushroomStates.AttackMove;
-        else if (attacking)
-            mushroomState = MushroomStates.Attack;
-
-        if (moveState == BaseMoveStates.MoveLeft)
-            monsterSR.flipX = false;
-        else if (moveState == BaseMoveStates.MoveRight)
-            monsterSR.flipX = true;
     }
 
     protected override void StateEffects()
@@ -117,8 +170,8 @@ public class MushroomScript : MonsterScript
         if (mushroomState == MushroomStates.Death)
             monsterAR.SetBool("Dead", true);
 
-        else if (mushroomState == MushroomStates.Attack)
-            monsterAR.SetBool("Attacking", true);
+        else if (mushroomState == MushroomStates.AttackMove)
+            monsterAR.SetBool("AttackMove", true);
 
         else if (moveState == BaseMoveStates.Idle || moveState == BaseMoveStates.IdleTwo)
         {
@@ -131,6 +184,17 @@ public class MushroomScript : MonsterScript
             monsterAR.SetBool("Moving", true);
             monsterAR.SetBool("Idle", false);
         }
+    }
+
+    private Vector2 attackHitBoxDirectioning = new Vector2(0, 0);
+    private void DirectionSetting()
+    {
+        if (Mathf.Abs(mushroomRB.linearVelocityX) <= 0.01f)
+            monsterSR.flipX = monsterSR.flipX;
+        
+        else
+            monsterSR.flipX = (mushroomRB.linearVelocityX < 0 ? false : true);
+
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }

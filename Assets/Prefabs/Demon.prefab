@@ -202,7 +202,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 1
-  attackBreathCollider: {fileID: 7392221522276097450}
+  attackCollider: {fileID: 7392221522276097450}
   timeToChangeMove: 1
 --- !u!70 &2534523176075248551
 CapsuleCollider2D:

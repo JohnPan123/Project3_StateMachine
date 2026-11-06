@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DemonScript : MonsterScript
 {
+    [SerializeField] protected BoxCollider2D attackCollider;
     private BaseMoveStates moveState;
     private DemonStates demonState;
     private enum BaseMoveStates
@@ -26,7 +27,7 @@ public class DemonScript : MonsterScript
         monsterAR = GetComponent<Animator>();
         monsterSR = GetComponent<SpriteRenderer>();
 
-        attackBreathCollider.enabled = false;
+        attackCollider.enabled = false;
 
         demonState = DemonStates.Idle;
         moveState = BaseMoveStates.Idle;
@@ -64,8 +65,8 @@ public class DemonScript : MonsterScript
                                 private float timeTillMoveChange = 0f;
     protected override void MonsterBaseMove()
     {
-        if (attackBreathCollider.enabled)
-            attackBreathCollider.enabled = false;
+        if (attackCollider.enabled)
+            attackCollider.enabled = false;
 
         timeTillMoveChange += Time.deltaTime;
 
@@ -100,8 +101,8 @@ public class DemonScript : MonsterScript
                                 private const float demonAttackSpeed = 4.5f;
     protected override void MonsterAttackMove()
     {
-        if (!attackBreathCollider.enabled && monsterAR.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Demon Attack Breath")
-            attackBreathCollider.enabled = true;
+        if (!attackCollider.enabled && monsterAR.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Demon Attack Breath")
+            attackCollider.enabled = true;
 
         if (transform.position.x < player.transform.position.x)
         {
@@ -154,7 +155,7 @@ public class DemonScript : MonsterScript
             else if (moveState == BaseMoveStates.MoveRight)
                 transform.Translate(-deathSpriteOffset);
 
-            attackBreathCollider.enabled = false;
+            attackCollider.enabled = false;
             dead = true;
             attacking = false;
         }

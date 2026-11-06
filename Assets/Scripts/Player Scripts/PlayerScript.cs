@@ -348,9 +348,8 @@ public class PlayerScript : MonoBehaviour
     private void DirectionSetting()
     {
         if (Mathf.Abs(playerRB.linearVelocityX) <= 0.01f)
-        {
             playerSR.flipX = playerSR.flipX;
-        }
+
         else
         {
             playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
