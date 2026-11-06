@@ -95,12 +95,12 @@ public class MushroomScript : MonsterScript
 
                                 private bool attacking = false;
                                 private Vector3 moveVectorAttack = new Vector3(0 , 0 , 0);
-                                private const float demonAttackSpeed = 4.5f;
+                                private const float mushroomAttackSpeed = 4.5f;
     protected override void MonsterAttackMove()
     {
         if (transform.position.x <= player.transform.position.x)
         {
-            moveVectorAttack.x = demonAttackSpeed;
+            moveVectorAttack.x = mushroomAttackSpeed;
             moveVectorAttack.y = mushroomRB.linearVelocityY;
 
             mushroomRB.linearVelocity = (Vector2)moveVectorAttack;
@@ -109,17 +109,12 @@ public class MushroomScript : MonsterScript
 
         else if (transform.position.x > player.transform.position.x)
         {
-            moveVectorAttack.x = -demonAttackSpeed;
+            moveVectorAttack.x = -mushroomAttackSpeed;
             moveVectorAttack.y = mushroomRB.linearVelocityY;
 
             mushroomRB.linearVelocity = (Vector2)moveVectorAttack;
             moveState = BaseMoveStates.MoveLeft;
         }
-    }
-
-    private void ExecuteAttack()
-    {
-
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACK FUNCTIONS
@@ -186,7 +181,6 @@ public class MushroomScript : MonsterScript
         }
     }
 
-    private Vector2 attackHitBoxDirectioning = new Vector2(0, 0);
     private void DirectionSetting()
     {
         if (Mathf.Abs(mushroomRB.linearVelocityX) <= 0.01f)
@@ -194,7 +188,6 @@ public class MushroomScript : MonsterScript
         
         else
             monsterSR.flipX = (mushroomRB.linearVelocityX < 0 ? false : true);
-
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }
