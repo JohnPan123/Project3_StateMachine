@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class MushroomScript : MonsterScript
@@ -30,11 +31,10 @@ public class MushroomScript : MonsterScript
     }
     void Update()
     {
-        if (idleAfterAttackBool)
-            AfterAttackIdle();
-        
-        else
+        if (!idleAfterAttackBool)
             MonsterDetectAttack();
+        else
+            AfterAttackIdle();
 
         SetState();
         StateEffects();
@@ -53,21 +53,31 @@ public class MushroomScript : MonsterScript
 
                                 private Vector3 moveVector = new Vector3(monsterSpeed , 0f , 0f);
                                 private const float monsterSpeed = 3.5f;
-                                [SerializeField] private float timeToChangeMove = 1f;
-                                private float timeTillMoveChange = 0f;
+                                private const float physicsTickTime = (1f / 50f);
+                                [SerializeField] private float distanceToChangeMove;
+                                [SerializeField] private float idleTime = 2f;
+                                private float distanceTravelledTracker = 0f;
+                                private float idleTimeTracker = 0f;
                                 private int movePhase = 0;
     protected override void MonsterBaseMove()
     {
-        timeTillMoveChange += Time.deltaTime;
+        distanceTravelledTracker += Mathf.Abs(mushroomRB.linearVelocityX) * physicsTickTime;
 
-        if (timeTillMoveChange >= timeToChangeMove)
+        if ((movePhase % 2) == 0)
+            idleTimeTracker += Time.deltaTime;
+
+        //Debug.Log("Distance: " + (distanceTravelledTracker >= distanceToChangeMove));
+        //Debug.Log("Time: " + (idleTimeTracker >= idleTime));
+
+        if ((distanceTravelledTracker >= distanceToChangeMove) || idleTimeTracker >= idleTime)
         {
             if ((movePhase + 1) == 4)
                 movePhase = 0;
             else
                 movePhase++;
 
-            timeTillMoveChange = 0f;
+            idleTimeTracker = 0f;
+            distanceTravelledTracker = 0f;
         }
 
         switch (movePhase)
@@ -155,7 +165,10 @@ public class MushroomScript : MonsterScript
         trackForAfterAttackTime += Time.deltaTime;
 
         if (trackForAfterAttackTime >= idleAfterAttack)
+        {
             idleAfterAttackBool = false;
+            trackForAfterAttackTime = 0f;
+        }
     }
 
     private void IsNotAttacking() //For animator use.
@@ -204,7 +217,7 @@ public class MushroomScript : MonsterScript
         else if (Mathf.Abs(mushroomRB.linearVelocityX) > 0.01f)
             mushroomState = MushroomStates.Move;
 
-        else if (mushroomRB.linearVelocityX == 0)
+        else if (mushroomRB.linearVelocityX <= 0.01f)
             mushroomState = MushroomStates.Idle;
 
     }

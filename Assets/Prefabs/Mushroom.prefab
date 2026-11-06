@@ -204,7 +204,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   attackCollider: {fileID: 8357291425209901478}
-  timeToChangeMove: 1
+  distanceToChangeMove: 4
 --- !u!70 &-8197012094160435542
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
