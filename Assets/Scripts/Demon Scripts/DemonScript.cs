@@ -150,6 +150,7 @@ public class DemonScript : MonsterScript
         {
             if (moveState == BaseMoveStates.MoveLeft)
                 transform.Translate(deathSpriteOffset);
+            
             else if (moveState == BaseMoveStates.MoveRight)
                 transform.Translate(-deathSpriteOffset);
 
@@ -179,11 +180,11 @@ public class DemonScript : MonsterScript
 
     protected override void StateEffects()
     {
-        if (demonState == DemonStates.BreathAttack)
+        if (demonState == DemonStates.Death)
+            monsterAR.SetBool("Dead", true);
+        
+        else if (demonState == DemonStates.BreathAttack)
             monsterAR.SetBool("Attacking" , true);
-
-        else if (demonState == DemonStates.Death)
-            monsterAR.SetBool("Dead" , true);
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }

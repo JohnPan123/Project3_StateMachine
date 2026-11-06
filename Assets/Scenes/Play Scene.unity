@@ -3262,11 +3262,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5163076907898001473, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.92
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5163076907898001473, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.36
+      value: -1.32
       objectReference: {fileID: 0}
     - target: {fileID: 5163076907898001473, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3645,7 +3645,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
