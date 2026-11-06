@@ -231,6 +231,7 @@ public class MushroomScript : MonsterScript
         {
             monsterAR.SetBool("Attack", true);
             monsterAR.SetBool("AttackMove", false);
+            monsterAR.SetBool("Idle", false);
         }
 
         else if (mushroomState == MushroomStates.AttackMove)

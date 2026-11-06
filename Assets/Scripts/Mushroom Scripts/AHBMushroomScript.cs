@@ -8,6 +8,8 @@ public class AHBMushroomScript : MonoBehaviour
     {
         //Can only collide with player due to layer collision matrix.
         //Cannot touch anything else. No need to check.
+        Debug.Log(true);
+
         mushroomScript.IsAttacking();
     }
 }
