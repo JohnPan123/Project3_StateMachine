@@ -2,16 +2,8 @@ using UnityEngine;
 
 public class DemonScript : MonsterScript
 {
-    [SerializeField] protected BoxCollider2D attackCollider;
-    private BaseMoveStates moveState;
     private DemonStates demonState;
-    private enum BaseMoveStates
-    {
-        Idle = 0,
-        MoveLeft = 1,
-        IdleTwo = 2,
-        MoveRight = 3
-    }
+ 
     private enum DemonStates
     {
         Idle = 0,
@@ -30,7 +22,6 @@ public class DemonScript : MonsterScript
         attackCollider.enabled = false;
 
         demonState = DemonStates.Idle;
-        moveState = BaseMoveStates.Idle;
 
         monsterHealth = 3;
     }
@@ -63,6 +54,7 @@ public class DemonScript : MonsterScript
                                 private const float demonSpeed = 3.5f;
                                 [SerializeField] private float timeToChangeMove = 1f;
                                 private float timeTillMoveChange = 0f;
+                                private int movePhase = 0;
     protected override void MonsterBaseMove()
     {
         if (attackCollider.enabled)
@@ -72,24 +64,24 @@ public class DemonScript : MonsterScript
 
         if (timeTillMoveChange >= timeToChangeMove)
         {
-            if (((int)moveState + 1) == 4)
-                moveState = BaseMoveStates.Idle;
+            if ((movePhase + 1) == 4)
+                movePhase = 0;
             else
-                moveState++;
+                movePhase++;
 
             timeTillMoveChange = 0f;
         }
 
-        switch (moveState)
+        switch (movePhase)
         {
-            case BaseMoveStates.Idle:
+            case 0:
                 break;
-            case BaseMoveStates.MoveLeft:
+            case 1:
                 transform.Translate(-moveVector * Time.deltaTime);
                 break;
-            case BaseMoveStates.IdleTwo:
+            case 2:
                 break;
-            case BaseMoveStates.MoveRight:
+            case 3:
                 transform.Translate(moveVector * Time.deltaTime);
                 break;
         }
@@ -107,12 +99,14 @@ public class DemonScript : MonsterScript
         if (transform.position.x < player.transform.position.x)
         {
             moveVector = (player.transform.position - transform.position + leftAttackOffset).normalized;
-            moveState = BaseMoveStates.MoveRight;
+            
+            movePhase = 3;
         }
         else
         {
             moveVector = (player.transform.position - transform.position + rightAttackOffset).normalized;
-            moveState = BaseMoveStates.MoveLeft;
+            
+            movePhase = 1;
         }
 
         transform.Translate(moveVector * demonAttackSpeed * Time.deltaTime);
@@ -149,10 +143,10 @@ public class DemonScript : MonsterScript
 
         if (monsterHealth <= 0)
         {
-            if (moveState == BaseMoveStates.MoveLeft)
+            if (movePhase == 1)
                 transform.Translate(deathSpriteOffset);
             
-            else if (moveState == BaseMoveStates.MoveRight)
+            else if (movePhase == 3)
                 transform.Translate(-deathSpriteOffset);
 
             attackCollider.enabled = false;
@@ -173,9 +167,9 @@ public class DemonScript : MonsterScript
         else if (attacking)
             demonState = DemonStates.BreathAttack;
 
-        if (moveState == BaseMoveStates.MoveLeft)
+        if (movePhase == 1)
             monsterSR.flipX = false;
-        else if (moveState == BaseMoveStates.MoveRight)
+        else if (movePhase == 3)
             monsterSR.flipX = true;
     }
 

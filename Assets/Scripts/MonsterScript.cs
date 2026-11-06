@@ -3,6 +3,7 @@ using UnityEngine;
 public abstract class MonsterScript : MonoBehaviour
 {
     [SerializeField] protected LayerMask playerLayer;
+    [SerializeField] protected BoxCollider2D attackCollider;
     protected GameObject player;
     protected SpriteRenderer monsterSR;
     protected Animator monsterAR;
