@@ -2006,6 +2006,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8197012094160435542, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
+      propertyPath: m_ForceSendLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8197012094160435542, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
+      propertyPath: m_ForceReceiveLayers.m_Bits
+      value: 5056
+      objectReference: {fileID: 0}
+    - target: {fileID: 400649496130167758, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4318863433741336643, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
       propertyPath: m_Name
       value: Mushroom
@@ -2055,7 +2067,8 @@ PrefabInstance:
       value: 3.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4979406862346248941, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28b00d62915cf3c4cbe2f472fb3f60cc, type: 3}

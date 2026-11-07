@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MushroomScript : MonsterScript
 {
-    [SerializeField] private BoxCollider2D physicsHitBox;
+    private BoxCollider2D mushroomHB;
     private Rigidbody2D mushroomRB;
     private MushroomStates mushroomState;
     private enum MushroomStates
@@ -19,6 +19,8 @@ public class MushroomScript : MonsterScript
         monsterAR = GetComponent<Animator>();
         monsterSR = GetComponent<SpriteRenderer>();
         mushroomRB = GetComponent<Rigidbody2D>();
+        mushroomHB = GetComponent<BoxCollider2D>();
+
 
         mushroomState = MushroomStates.Idle;
         monsterHealth = 3;
@@ -40,9 +42,7 @@ public class MushroomScript : MonsterScript
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     private void MushroomMove()
     {
-        if (idleAfterAttackBool) 
-            ;
-        else if (attacking)
+        if (idleAfterAttackBool || attacking) 
             ;
         else if (attackMove)
             MonsterAttackMove();
@@ -155,7 +155,7 @@ public class MushroomScript : MonsterScript
     {
         attackMove = false;
         attacking = true;
-    } //For AHBMushroom Script use
+    } //For AHBMushroom Script
 
                                     private const float idleAfterAttack = 0.5f;
                                     private float afterAttackIdleTimeTracker = 0f;
@@ -219,7 +219,12 @@ public class MushroomScript : MonsterScript
     protected override void StateEffects()
     {
         if (mushroomState == MushroomStates.Death)
+        {
             monsterAR.SetBool("Dead", true);
+            monsterAR.SetBool("Attack", false);
+            monsterAR.SetBool("Moving", false);
+            monsterAR.SetBool("Idle", false);
+        }
 
         else if (mushroomState == MushroomStates.Attack)
         {
