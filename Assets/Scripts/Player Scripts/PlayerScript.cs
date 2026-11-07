@@ -70,9 +70,9 @@ public class PlayerScript : MonoBehaviour
         StateEffects();
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
-    private float sprintSpeed = 5f;
-    private float horizontalMovement = 0f;
-    private Vector2 velocity = new Vector2(0f , 0f);
+                                    private float sprintSpeed = 5f;
+                                    private float horizontalMovement = 0f;
+                                    private Vector2 velocity = new Vector2(0f , 0f);
     private void HorizontalMovement()
     {
         horizontalMovement = horizontalMovementInput.ReadValue<float>();
@@ -86,7 +86,8 @@ public class PlayerScript : MonoBehaviour
         playerRB.linearVelocity = velocity;
     }
 
-    private bool dashing = false;
+
+                                    private bool dashing = false;
     private void CheckForDash()
     {
         if (!DoingSomething() && dashInput.triggered)
@@ -99,11 +100,12 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private Vector2 velocityForDashing = new Vector2();
-    private const float dashSpeedPeak = 20f;
-    private float sprintSpeedForDashing = 5f;
-    private float currentDashSpeed;
-    private float direction;
+
+                                    private Vector2 velocityForDashing = new Vector2();
+                                    private const float dashSpeedPeak = 20f;
+                                    private float sprintSpeedForDashing = 5f;
+                                    private float currentDashSpeed;
+                                    private float direction;
     private void ExecuteDash()
     {
         if (dashing)
@@ -123,11 +125,12 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private bool jumping = false;
-    private bool stillJump = false;
-    private bool jumpVelocityUpdated = false; //Used to account for physics updates and frame update offsets.
-    private const float initialJumpVel = 5f;
-    private float currentJumpVal;
+
+                                    private bool jumping = false;
+                                    private bool stillJump = false;
+                                    private bool jumpVelocityUpdated = false; //Used to account for physics updates and frame update offsets.
+                                    private const float initialJumpVel = 5f;
+                                    private float currentJumpVal;
     private void CheckForJump()
     {
         if (!DoingSomething() && jumpInput.triggered)
@@ -144,10 +147,11 @@ public class PlayerScript : MonoBehaviour
             currentJumpVal = initialJumpVel;
         }
     }
-    private Vector2 velocityForJumping = new Vector2(0f , 0f);
-    private const float allowedAdditionalRiseTime = 0.25f;
-    private const float jumpIncr = .35f;
-    private float trackedRiseTime;
+
+                                    private Vector2 velocityForJumping = new Vector2(0f , 0f);
+                                    private const float allowedAdditionalRiseTime = 0.25f;
+                                    private const float jumpIncr = .35f;
+                                    private float trackedRiseTime;
     private void ExecuteJump()
     {
         if (jumping)
@@ -175,8 +179,9 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private bool solidHitLanded = false;
-    private GameObject onCollisionEnterGameObject;
+
+                                    private bool solidHitLanded = false;
+                                    private GameObject onCollisionEnterGameObject;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         onCollisionEnterGameObject = collision.gameObject;
@@ -207,11 +212,12 @@ public class PlayerScript : MonoBehaviour
         playerAR.SetTrigger("Jump Landing Done");
     }
 
-    [SerializeField] private float gravityMulitplier = 7f;
-    private const float drawDistance = 0.79f;
-    private Vector3 playerWidthOffset = new Vector3(0.23f , 0f , 0f);
-    private Vector2 velocityDueToGravity = new Vector2(0 , -9.81f  * (1f / 50f));
-    private Vector2 onGroundVelocityDueToGravity = new Vector2(0 , 0);
+
+                                    [SerializeField] private float gravityMulitplier = 7f;
+                                    private const float drawDistance = 0.79f;
+                                    private Vector3 playerWidthOffset = new Vector3(0.23f , 0f , 0f);
+                                    private Vector2 velocityDueToGravity = new Vector2(0 , -9.81f  * (1f / 50f));
+                                    private Vector2 onGroundVelocityDueToGravity = new Vector2(0 , 0);
     private void ExecuteGravity()
     {
         //Debug.DrawRay(transform.position + playerWidthOffset, Vector2.down * drawDistance , Color.red);
@@ -223,10 +229,10 @@ public class PlayerScript : MonoBehaviour
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACKING FUNCTIONS
-    private bool attacking = false;
-    private bool nextAttackConfirmed = false;
-    private bool attackTwo = false;
-    private bool attackThree = false;
+                                    private bool attacking = false;
+                                    private bool nextAttackConfirmed = false;
+                                    private bool attackTwo = false;
+                                    private bool attackThree = false;
     private void CheckForAttack()
     {
         if (!DoingSomething() && attackInput.triggered)
@@ -259,16 +265,15 @@ public class PlayerScript : MonoBehaviour
         nextAttackConfirmed = false;
     }
 
-    private Vector2 attackingVelocity = new Vector2(0, 0);
     private void ExecuteAttack()
     {
         if (attacking)
-            playerRB.linearVelocity = attackingVelocity;
+            playerRB.linearVelocity = Vector2.zero;
     }
     //--------------------------------------------------| ATTACKING FUNCTIONS
     //--------------------------------------------------| ATTACKING HITBOX FUNCTIONS
-    private const int locationOfHitBoxNumber = 12; //The names for the base attacks are all Base Attack n.
-    private int hitBox = 0;
+                                    private const int locationOfHitBoxNumber = 12; //The names for the base attacks are all Base Attack n.
+                                    private int hitBox = 0;
     private void BaseAttackHitBoxActivation()
     {
         hitBox = int.Parse(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name.Substring(locationOfHitBoxNumber));
@@ -337,19 +342,17 @@ public class PlayerScript : MonoBehaviour
 
         if (playerState == PlayerState.Idle)
         {
-            playerAR.SetBool("Sprinting", false);
-            playerAR.SetBool("Dashing", false);
+            playerAR.SetTrigger("Idle");
         }
 
         else if (playerState == PlayerState.Sprint)
         {
-            playerAR.SetBool("Sprinting" , true);
-            playerAR.SetBool("Dashing", false);
+            playerAR.SetTrigger("Sprinting");
         }
 
         else if (playerState == PlayerState.Dash)
         {
-            playerAR.SetBool("Dashing" , true);
+            playerAR.SetTrigger("Dashing");
         }
 
         else if (playerState == PlayerState.Jump)
@@ -364,9 +367,6 @@ public class PlayerScript : MonoBehaviour
 
         else if (playerState == PlayerState.ReceivedHit)
         {
-            playerAR.SetBool("Sprinting", false);
-            playerAR.SetBool("Dashing", false);
-            playerAR.SetBool("Jumping", false);
 
             //playerAR
         }
@@ -377,7 +377,7 @@ public class PlayerScript : MonoBehaviour
     private Vector2 attackHitBoxDirectioning = new Vector2(0 , 0);
     private void DirectionSetting()
     {
-        if (Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed)
+        if ((Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed) || (horizontalMovementInput.ReadValue<float>() == 0))
             playerSR.flipX = playerSR.flipX;
 
         else
