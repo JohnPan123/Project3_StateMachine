@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class MushroomScript : MonsterScript
@@ -10,8 +9,7 @@ public class MushroomScript : MonsterScript
         Idle = 0,
         Move = 1,
         Attack = 2,
-        AttackMove = 3,
-        Death = 4
+        Death = 3
     }
     void Start()
     {
@@ -22,6 +20,7 @@ public class MushroomScript : MonsterScript
         mushroomRB = GetComponent<Rigidbody2D>();
 
         mushroomState = MushroomStates.Idle;
+        monsterHealth = 3;
     }
 
     private void FixedUpdate()
@@ -56,20 +55,17 @@ public class MushroomScript : MonsterScript
                                 private const float physicsTickTime = (1f / 50f);
                                 [SerializeField] private float distanceToChangeMove;
                                 [SerializeField] private float idleTime = 2f;
-                                private float distanceTravelledTracker = 0f;
+                                private float xDistanceTravelledTracker = 0f;
                                 private float idleTimeTracker = 0f;
                                 private int movePhase = 0;
     protected override void MonsterBaseMove()
     {
-        distanceTravelledTracker += Mathf.Abs(mushroomRB.linearVelocityX) * physicsTickTime;
+        xDistanceTravelledTracker += Mathf.Abs(mushroomRB.linearVelocityX) * physicsTickTime;
 
         if ((movePhase % 2) == 0)
             idleTimeTracker += Time.deltaTime;
 
-        //Debug.Log("Distance: " + (distanceTravelledTracker >= distanceToChangeMove));
-        //Debug.Log("Time: " + (idleTimeTracker >= idleTime));
-
-        if ((distanceTravelledTracker >= distanceToChangeMove) || idleTimeTracker >= idleTime)
+        if ((xDistanceTravelledTracker >= distanceToChangeMove) || idleTimeTracker >= idleTime)
         {
             if ((movePhase + 1) == 4)
                 movePhase = 0;
@@ -77,30 +73,30 @@ public class MushroomScript : MonsterScript
                 movePhase++;
 
             idleTimeTracker = 0f;
-            distanceTravelledTracker = 0f;
+            xDistanceTravelledTracker = 0f;
         }
 
         switch (movePhase)
         {
-            case 0:
+            case 0: //Idle
                 moveVector.x = 0f;
                 moveVector.y = mushroomRB.linearVelocityY;
 
                 mushroomRB.linearVelocity = Vector2.zero;
                 break;
-            case 1:
+            case 1: //Move left
                 moveVector.x = -monsterSpeed;
                 moveVector.y = mushroomRB.linearVelocityY;
 
                 mushroomRB.linearVelocity = moveVector;
                 break;
-            case 2:
+            case 2: //Idle
                 moveVector.x = 0f;
                 moveVector.y = mushroomRB.linearVelocityY;
 
                 mushroomRB.linearVelocity = Vector2.zero;
                 break;
-            case 3:
+            case 3: //Move right
                 moveVector.x = monsterSpeed;
                 moveVector.y = mushroomRB.linearVelocityY;
 
@@ -111,16 +107,16 @@ public class MushroomScript : MonsterScript
 
 
                                 private bool attacking = false;
-                                private Vector3 moveVectorAttack = new Vector3(0 , 0 , 0);
+                                private Vector2 moveVectorAttack = new Vector3(0 , 0);
                                 private const float mushroomAttackSpeed = 4.5f;
     protected override void MonsterAttackMove()
     {
-        if (transform.position.x <= player.transform.position.x)
+        if (transform.position.x < player.transform.position.x)
         {
             moveVectorAttack.x = mushroomAttackSpeed;
             moveVectorAttack.y = mushroomRB.linearVelocityY;
 
-            mushroomRB.linearVelocity = (Vector2)moveVectorAttack;
+            mushroomRB.linearVelocity = moveVectorAttack;
         }
 
         else if (transform.position.x > player.transform.position.x)
@@ -128,23 +124,25 @@ public class MushroomScript : MonsterScript
             moveVectorAttack.x = -mushroomAttackSpeed;
             moveVectorAttack.y = mushroomRB.linearVelocityY;
 
-            mushroomRB.linearVelocity = (Vector2)moveVectorAttack;
+            mushroomRB.linearVelocity = moveVectorAttack;
         }
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACK FUNCTIONS
-                                private const float verticalViewRange = 1f;
+                                private const float verticalViewRange = 0.7f;
                                 private const float horizontalViewRange = 3f;
-                                private Vector2 rayDirection = new Vector2(0, 0);
+                                private Vector3 mushroomHeightOffset = new Vector3(0 , 0.5f , 0);
+                                private Vector2 rayDirection = new Vector2(0 , 0);
                                 private bool attackMove = false;
     protected override void MonsterDetectAttack()
     {
-        for (float verticalComponenet = 0f; verticalComponenet <= verticalViewRange; verticalComponenet += 0.2f)
+        for (float verticalComponenet = -0.35f ; verticalComponenet <= verticalViewRange ; verticalComponenet += (0.35f / 2))
         {
             rayDirection.x = (monsterSR.flipX ? 1 : -1) * horizontalViewRange;
             rayDirection.y = verticalComponenet;
 
-            if (Physics2D.Raycast(transform.position, rayDirection, rayDirection.magnitude, playerLayer))
+            if (Physics2D.Raycast(transform.position - mushroomHeightOffset , 
+                rayDirection, rayDirection.magnitude , playerLayer))
             {
                 attackMove = true;
                 break;
@@ -154,29 +152,29 @@ public class MushroomScript : MonsterScript
 
     public void IsAttacking()
     {
+        attackMove = false;
         attacking = true;
     }
 
-    private const float idleAfterAttack = 0.5f;
-    private float trackForAfterAttackTime = 0f;
-    private bool idleAfterAttackBool = false;
+                                    private const float idleAfterAttack = 0.5f;
+                                    private float afterAttackIdleTimeTracker = 0f;
+                                    private bool idleAfterAttackBool = false;
     private void AfterAttackIdle()
     {
-        trackForAfterAttackTime += Time.deltaTime;
+        afterAttackIdleTimeTracker += Time.deltaTime;
 
-        if (trackForAfterAttackTime >= idleAfterAttack)
+        if (afterAttackIdleTimeTracker >= idleAfterAttack)
         {
             idleAfterAttackBool = false;
-            trackForAfterAttackTime = 0f;
+            afterAttackIdleTimeTracker = 0f;
         }
+
+        mushroomRB.linearVelocity = Vector2.zero;
     }
 
     private void IsNotAttacking() //For animator use.
     {
-        trackForAfterAttackTime = 0f;
-
         attacking = false;
-        attackMove = false;
         idleAfterAttackBool = true;
     }
     //--------------------------------------------------| ATTACK FUNCTIONS
@@ -200,8 +198,6 @@ public class MushroomScript : MonsterScript
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     protected override void SetState()
     {
-        DirectionSetting();
-
         if (dead)
             mushroomState = MushroomStates.Death;
 
@@ -211,15 +207,13 @@ public class MushroomScript : MonsterScript
         else if (attacking)
             mushroomState = MushroomStates.Attack;
 
-        else if (attackMove)
-            mushroomState = MushroomStates.AttackMove;
-
         else if (Mathf.Abs(mushroomRB.linearVelocityX) > 0.01f)
             mushroomState = MushroomStates.Move;
 
         else if (mushroomRB.linearVelocityX <= 0.01f)
             mushroomState = MushroomStates.Idle;
 
+        DirectionSetting();
     }
 
     protected override void StateEffects()
@@ -230,14 +224,8 @@ public class MushroomScript : MonsterScript
         else if (mushroomState == MushroomStates.Attack)
         {
             monsterAR.SetBool("Attack", true);
-            monsterAR.SetBool("AttackMove", false);
+            monsterAR.SetBool("Moving", false);
             monsterAR.SetBool("Idle", false);
-        }
-
-        else if (mushroomState == MushroomStates.AttackMove)
-        {
-            monsterAR.SetBool("Attack", false);
-            monsterAR.SetBool("AttackMove", true);
         }
 
         else if (mushroomState == MushroomStates.Move)
@@ -254,13 +242,20 @@ public class MushroomScript : MonsterScript
         }
     }
 
+    private Vector2 hitBoxLocation = new Vector2(0 , hitBoxLocationY);
+    private const float hitBoxLocationY = -0.16f;
     private void DirectionSetting()
     {
         if (Mathf.Abs(mushroomRB.linearVelocityX) <= 0.01f)
             monsterSR.flipX = monsterSR.flipX;
         
         else
+        {
             monsterSR.flipX = (mushroomRB.linearVelocityX < 0 ? false : true);
+
+            hitBoxLocation.x = (monsterSR.flipX ? Mathf.Abs(attackCollider.offset.x) : -Mathf.Abs(attackCollider.offset.x));
+            attackCollider.offset = hitBoxLocation;
+        }
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }
