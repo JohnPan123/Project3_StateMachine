@@ -144,12 +144,12 @@ TextureImporter:
       name: Jump Foward Attack_0
       rect:
         serializedVersion: 2
-        x: 15
+        x: 0
         y: 192
-        width: 23
-        height: 31
+        width: 56
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -166,12 +166,12 @@ TextureImporter:
       name: Jump Foward Attack_1
       rect:
         serializedVersion: 2
-        x: 12
-        y: 146
-        width: 24
-        height: 30
+        x: 0
+        y: 144
+        width: 56
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -188,12 +188,12 @@ TextureImporter:
       name: Jump Foward Attack_2
       rect:
         serializedVersion: 2
-        x: 12
-        y: 97
-        width: 42
-        height: 31
+        x: 0
+        y: 96
+        width: 56
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -210,12 +210,12 @@ TextureImporter:
       name: Jump Foward Attack_3
       rect:
         serializedVersion: 2
-        x: 12
-        y: 49
-        width: 42
-        height: 31
+        x: 0
+        y: 48
+        width: 56
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -232,12 +232,12 @@ TextureImporter:
       name: Jump Foward Attack_4
       rect:
         serializedVersion: 2
-        x: 12
+        x: 0
         y: 0
-        width: 38
-        height: 33
+        width: 56
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -250,33 +250,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Jump Foward Attack_5
-      rect:
-        serializedVersion: 2
-        x: 44
-        y: 9
-        width: 10
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0358a5c587eaf49e0800000000000000
-      internalID: -1634896307743455952
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 1d12983d8c9d5ed48999291bbf1e28c2
     internalID: 0
     vertices: []
     indices: 
@@ -284,14 +262,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":5.0},"gridSpriteSize":{"x":56.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Jump Foward Attack_0: 8509308205818029353
       Jump Foward Attack_1: 669074778147659813
       Jump Foward Attack_2: -929968882300392469
       Jump Foward Attack_3: 4939056537957277153
       Jump Foward Attack_4: -2189308841364693412
-      Jump Foward Attack_5: -1634896307743455952
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

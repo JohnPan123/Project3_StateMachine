@@ -231,12 +231,10 @@ public class PlayerScript : MonoBehaviour
     //--------------------------------------------------| ATTACKING FUNCTIONS
                                     private bool attacking = false;
                                     private bool nextAttackConfirmed = false;
-                                    private bool attackTwo = false;
-                                    private bool attackThree = false;
     private void CheckForAttack()
     {
         if (!DoingSomething() && attackInput.triggered)
-            attacking = true;
+            attacking = nextAttackConfirmed = true;
 
         else if (attacking && attackInput.triggered)
             nextAttackConfirmed = true;
@@ -244,23 +242,8 @@ public class PlayerScript : MonoBehaviour
 
     private void CheckForNextAttack() //For use by animator
     {
-        if (nextAttackConfirmed)
-        {
-            if (!attackTwo)
-                attackTwo = true;
-
-            else if (!attackThree)
-                attackThree = true;
-
-            else
-            {
-                attacking = true;
-                attackTwo = attackThree = false;
-            }
-        }
-
-        else
-            attacking = attackTwo = attackThree = false;
+        if (!nextAttackConfirmed)
+            attacking = false;
 
         nextAttackConfirmed = false;
     }
@@ -362,7 +345,8 @@ public class PlayerScript : MonoBehaviour
 
         else if (playerState == PlayerState.Attack)
         {
-            playerAR.SetTrigger("Attacking");
+            if (nextAttackConfirmed)
+                playerAR.SetTrigger("Attacking");
         }
 
         else if (playerState == PlayerState.ReceivedHit)
