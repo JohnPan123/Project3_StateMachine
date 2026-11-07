@@ -30,7 +30,6 @@ public class MushroomScript : MonsterScript
 
         mushroomState = MushroomStates.Idle;
         monsterHealth = 3;
-        monsterAR.SetFloat("Health" , 3);
     }
 
     private void FixedUpdate()
@@ -136,14 +135,6 @@ public class MushroomScript : MonsterScript
 
             mushroomRB.linearVelocity = moveVectorAttack;
         }
-
-        else
-        {
-            moveVectorAttack.x = -mushroomAttackSpeed;
-            moveVectorAttack.y = mushroomRB.linearVelocityY;
-
-            mushroomRB.linearVelocity = moveVectorAttack;
-        }
     }
 
     private void MushroomNotMoving()
@@ -173,10 +164,12 @@ public class MushroomScript : MonsterScript
         }
     }
 
+    private bool needToSetAttackTriggerForAnimator = true;
     public void IsAttacking()
     {
         attackMove = false;
         attacking = true;
+        needToSetAttackTriggerForAnimator = true;
     } //For AHBMushroom Script
 
 
@@ -195,7 +188,7 @@ public class MushroomScript : MonsterScript
 
     }
 
-    private const float idleAfterAttack = 0.5f;
+                                    private const float idleAfterAttack = 0.5f;
                                     private float afterAttackIdleTimeTracker = 0f;
                                     private bool idleAfterAttackBool = false;
     private void AfterAttackIdle()
@@ -233,14 +226,16 @@ public class MushroomScript : MonsterScript
         }
     }
 
-    private bool tookHit , needToRegisterHitForAnimator = false;
+    private bool tookHit , needToRegisterReceivedHitTriggerForAnimator = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject objectOfTriggerCollision = collision.gameObject;
 
-        if (objectOfTriggerCollision.layer == (int)(playerAttackTriggerColliderLayer)) 
-            tookHit = needToRegisterHitForAnimator = true;
-
+        if (objectOfTriggerCollision.layer == playerAttackTriggerColliderLayer)
+        {
+            //Debug.Log(true);
+            tookHit = needToRegisterReceivedHitTriggerForAnimator = true;
+        }
     }
     protected override void Death()
     {
@@ -274,44 +269,40 @@ public class MushroomScript : MonsterScript
     protected override void StateEffects()
     {
         if (mushroomState == MushroomStates.Death)
-        {
-            monsterAR.SetBool("Dead", true);
-            monsterAR.SetFloat("Health", monsterHealth);
-
-            monsterAR.SetBool("Attack", false);
-            monsterAR.SetBool("Moving", false);
-            monsterAR.SetBool("Idle", false);
-        }
+            monsterAR.SetTrigger("Dead");
 
         else if (mushroomState == MushroomStates.TookHit)
         {
-            if (needToRegisterHitForAnimator)
+            if (needToRegisterReceivedHitTriggerForAnimator)
             {
                 monsterAR.SetTrigger("Took Damage");
-                needToRegisterHitForAnimator = false;
+                needToRegisterReceivedHitTriggerForAnimator = false;
+                Debug.Log(true);
             }
 
-            monsterAR.SetBool("Attack", false);
             monsterAR.SetBool("Moving", false);
             monsterAR.SetBool("Idle", false);
         }
 
         else if (mushroomState == MushroomStates.Attack)
         {
-            monsterAR.SetBool("Attack", true);
+            if (needToSetAttackTriggerForAnimator)
+            {
+                monsterAR.SetTrigger("Attack");
+                needToSetAttackTriggerForAnimator = false;
+            }
+
             monsterAR.SetBool("Moving", false);
             monsterAR.SetBool("Idle", false);
         }
 
         else if (mushroomState == MushroomStates.Move)
         {
-            monsterAR.SetBool("Attack", false);
             monsterAR.SetBool("Moving", true);
             monsterAR.SetBool("Idle", false);
         }
         else if (mushroomState == MushroomStates.Idle)
         {
-            monsterAR.SetBool("Attack", false);
             monsterAR.SetBool("Moving", false);
             monsterAR.SetBool("Idle", true);
         }

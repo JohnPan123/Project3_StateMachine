@@ -12,9 +12,7 @@ public class PlayerHitBoxScript : MonoBehaviour
             collision.gameObject.GetComponent<DemonScript>().LoseHealth(damageDealt);
 
         else if (collidedObject.GetComponent<MushroomScript>() != null)
-        {
             collision.gameObject.GetComponent<MushroomScript>().LoseHealth(damageDealt);
-            Debug.Log(true);
-        }
+
     }
 }
