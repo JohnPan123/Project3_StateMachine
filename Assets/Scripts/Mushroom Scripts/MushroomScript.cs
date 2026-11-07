@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MushroomScript : MonsterScript
 {
+    [SerializeField] private BoxCollider2D physicsHitBox;
     private Rigidbody2D mushroomRB;
     private MushroomStates mushroomState;
     private enum MushroomStates
@@ -30,10 +31,8 @@ public class MushroomScript : MonsterScript
     }
     void Update()
     {
-        if (!idleAfterAttackBool)
-            MonsterDetectAttack();
-        else
-            AfterAttackIdle();
+        if (!idleAfterAttackBool) { MonsterDetectAttack(); }
+        else { AfterAttackIdle(); }
 
         SetState();
         StateEffects();
@@ -41,8 +40,10 @@ public class MushroomScript : MonsterScript
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     private void MushroomMove()
     {
-        if (idleAfterAttackBool) ;
-        else if (attacking) ;
+        if (idleAfterAttackBool) 
+            ;
+        else if (attacking)
+            ;
         else if (attackMove)
             MonsterAttackMove();
         else
@@ -154,7 +155,7 @@ public class MushroomScript : MonsterScript
     {
         attackMove = false;
         attacking = true;
-    }
+    } //For AHBMushroom Script use
 
                                     private const float idleAfterAttack = 0.5f;
                                     private float afterAttackIdleTimeTracker = 0f;
@@ -171,7 +172,6 @@ public class MushroomScript : MonsterScript
 
         mushroomRB.linearVelocity = Vector2.zero;
     }
-
     private void IsNotAttacking() //For animator use.
     {
         attacking = false;
