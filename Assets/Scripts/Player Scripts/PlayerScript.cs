@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -51,17 +52,24 @@ public class PlayerScript : MonoBehaviour
         playerName = gameObject.name;
         playerState = PlayerState.Idle;
     }
+
     private void FixedUpdate()
     {
         ExecuteGravity();
 
-        HorizontalMovement();
+        if (solidHitLanded)
+            StaggerMovement();
+        else
+            HorizontalMovement();
+
         ExecuteJump();
         ExecuteDash();
         ExecuteAttack();
     }
     void Update()
     {
+        //DebugFunction();
+
         CheckForJump();
         CheckForDash();
         CheckForAttack();
@@ -180,9 +188,19 @@ public class PlayerScript : MonoBehaviour
     }
 
 
+                                    private const float staggerMovementSpeed = 3f;
+                                    private Vector2 staggerMovement = new Vector2(0 , 0);
+    private void StaggerMovement()
+    {
+        staggerMovement.y = playerRB.linearVelocityY;
+        playerRB.linearVelocity = staggerMovement;
+    }
+
                                     private bool solidHitLanded = false;
+                                    private bool sameDirection = false;
+                                    private bool otherDirection = false;
                                     private GameObject onCollisionEnterGameObject;
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision) //Collision function here
     {
         onCollisionEnterGameObject = collision.gameObject;
 
@@ -202,9 +220,41 @@ public class PlayerScript : MonoBehaviour
         
         else if (onCollisionEnterGameObject.layer == landingLayersDict["Island Under Layer"])
             currentJumpVal = 0f;
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        onCollisionEnterGameObject = collision.gameObject;
 
         if (onCollisionEnterGameObject.CompareTag("MushroomHitBox"))
-            solidHitLanded = true;
+        {
+            solidHitLanded = animationDamageTrigger = true;
+            attacking = jumping = dashing = false;
+
+            if (onCollisionEnterGameObject.transform.position.x > transform.position.x)
+            {
+                staggerMovement.x = -staggerMovementSpeed;
+
+                if (playerSR.flipX)
+                    sameDirection = true;
+                else
+                    otherDirection = true;
+            }
+            else
+            {
+                staggerMovement.x = staggerMovementSpeed;
+
+                if (playerSR.flipX)
+                    otherDirection = true;
+                else
+                    sameDirection = true;
+            }
+
+        }
+    }
+    private bool animationDamageTrigger = false;
+    private void FinishedTakingDamage() //For animator
+    {
+        solidHitLanded = otherDirection = sameDirection = false;
     }
 
     private void JumpLandingDone() //For animator use only
@@ -287,13 +337,17 @@ public class PlayerScript : MonoBehaviour
         else
             return false;
     }
+
+    private void DebugFunction()
+    {
+        Debug.Log($"Solid Hit: {solidHitLanded} || Jumping: {jumping} || Dashing: {dashing} || Attacking: {attacking}");
+    }
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     //--------------------------------------------------|  PLAYER HEALTH FUNCTIONS
     public void HealthLost(float healthLost)
     {
         playerHealth -= healthLost;
     }
-
     public float GetPlayerHealth => playerHealth;
     //--------------------------------------------------| PLAYER HEALTH FUNCTIONS
     //--------------------------------------------------| STATE SETTING FUNCTIONS
@@ -302,7 +356,7 @@ public class PlayerScript : MonoBehaviour
         if (solidHitLanded)
             playerState = PlayerState.ReceivedHit;
 
-        if (jumping)
+        else if (jumping)
             playerState = PlayerState.Jump;
 
         else if (dashing)
@@ -351,8 +405,20 @@ public class PlayerScript : MonoBehaviour
 
         else if (playerState == PlayerState.ReceivedHit)
         {
+            if (animationDamageTrigger)
+            {
+                playerAR.SetTrigger("Received Hit");
+                playerAR.SetBool("Jumping", false);
 
-            //playerAR
+                if (sameDirection)
+                    playerAR.SetBool("Hit Direction", true);
+
+                else if (otherDirection)
+                    playerAR.SetBool("Hit Direction", false);
+
+                animationDamageTrigger = false;
+            }
+            
         }
 
         DirectionSetting();
@@ -361,7 +427,8 @@ public class PlayerScript : MonoBehaviour
     private Vector2 attackHitBoxDirectioning = new Vector2(0 , 0);
     private void DirectionSetting()
     {
-        if ((Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed) || (horizontalMovementInput.ReadValue<float>() == 0))
+        if ((Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed) || 
+            (horizontalMovementInput.ReadValue<float>() == 0) || solidHitLanded)
             playerSR.flipX = playerSR.flipX;
 
         else

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5577238611074664438}
   - component: {fileID: 8357291425209901478}
   m_Layer: 11
-  m_Name: Attack Hit Box
+  m_Name: Attack Trigger Hit Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -205,6 +205,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   attackCollider: {fileID: 8357291425209901478}
+  playerAttackTriggerColliderLayer: 12
   physicsAttackHB: {fileID: 4979406862346248941}
   distanceToChangeMove: 3.25
   idleTime: 2
@@ -303,15 +304,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1632638514027959792}
+  - component: {fileID: 3924197865398868235}
   - component: {fileID: 400649496130167758}
-  - component: {fileID: 7474520000114348414}
   m_Layer: 11
-  m_Name: Physics Hit Box
-  m_TagString: Untagged
+  m_Name: Attack Landing Hit Box
+  m_TagString: MushroomHitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1632638514027959792
 Transform:
   m_ObjectHideFlags: 0
@@ -327,6 +328,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5163076907898001473}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3924197865398868235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4979406862346248941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e587ad044995488772a705449ca5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PHBMushroomScript
+  physicsHB: {fileID: 4979406862346248941}
 --- !u!61 &400649496130167758
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -357,7 +371,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 1
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -373,30 +387,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.24581185, y: 0.315}
   m_EdgeRadius: 0
---- !u!50 &7474520000114348414
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4979406862346248941}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4

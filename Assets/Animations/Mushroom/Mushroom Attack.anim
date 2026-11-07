@@ -98,7 +98,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.3
-    functionName: ExecuteHitBoxAttack
+    functionName: EnableHitBoxForAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -106,13 +106,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.68333334
     functionName: IsNotAttacking
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.68333334
-    functionName: ReturnHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
