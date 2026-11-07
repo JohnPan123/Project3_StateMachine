@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class MushroomScript : MonsterScript
 {
-    private BoxCollider2D mushroomHB;
+    [SerializeField] private GameObject physicsAttackHB;
+    private BoxCollider2D physicsHBCollider;
+    private Rigidbody2D physicsHBRB;
+
     private Rigidbody2D mushroomRB;
     private MushroomStates mushroomState;
     private enum MushroomStates
@@ -19,8 +22,9 @@ public class MushroomScript : MonsterScript
         monsterAR = GetComponent<Animator>();
         monsterSR = GetComponent<SpriteRenderer>();
         mushroomRB = GetComponent<Rigidbody2D>();
-        mushroomHB = GetComponent<BoxCollider2D>();
 
+        physicsHBCollider = physicsAttackHB.GetComponent<BoxCollider2D>();
+        physicsHBRB = physicsAttackHB.GetComponent<Rigidbody2D>();
 
         mushroomState = MushroomStates.Idle;
         monsterHealth = 3;
@@ -157,7 +161,29 @@ public class MushroomScript : MonsterScript
         attacking = true;
     } //For AHBMushroom Script
 
-                                    private const float idleAfterAttack = 0.5f;
+
+                                private Vector2 attackHBV = new Vector2(attackHBSpeed , 0);
+                                private const float attackHBSpeed = 5f;
+    public void ExecuteHitBoxAttack() //For animator
+    {
+        physicsAttackHB.SetActive(true);
+
+        if (monsterSR.flipX)
+            physicsHBRB.linearVelocity = attackHBV;
+
+        else
+            physicsHBRB.linearVelocity = -attackHBV;
+    }
+
+    public void ReturnHitBox() //For animator
+    {
+        physicsHBRB.linearVelocity = Vector2.zero;
+
+        physicsAttackHB.transform.localPosition = Vector3.zero;
+        physicsAttackHB.SetActive(false);
+    }
+
+    private const float idleAfterAttack = 0.5f;
                                     private float afterAttackIdleTimeTracker = 0f;
                                     private bool idleAfterAttackBool = false;
     private void AfterAttackIdle()
@@ -171,6 +197,11 @@ public class MushroomScript : MonsterScript
         }
 
         mushroomRB.linearVelocity = Vector2.zero;
+    }
+    private void AttackColliderMovement()
+    {
+        if (monsterSR.flipX) ;
+            //physicsAttackHB.
     }
     private void IsNotAttacking() //For animator use.
     {

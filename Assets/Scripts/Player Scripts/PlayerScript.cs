@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using System;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     private SpriteRenderer playerSR;
 
     private float playerHealth = 100f;
+    private const float playerZeroSpeed = 0.1f;
 
     [SerializeField] private List<BoxCollider2D> attackHitBoxes;
     private Dictionary<string, int> landingLayersDict = new Dictionary<string , int>();
@@ -28,7 +28,8 @@ public class PlayerScript : MonoBehaviour
         Sprint = 1,
         Jump = 2,
         Dash = 3,
-        Attack = 4
+        Attack = 4,
+        ReceivedHit = 5
     }
 
     void Start()
@@ -123,6 +124,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     private bool jumping = false;
+    private bool stillJump = false;
     private bool jumpVelocityUpdated = false; //Used to account for physics updates and frame update offsets.
     private const float initialJumpVel = 5f;
     private float currentJumpVal;
@@ -134,6 +136,9 @@ public class PlayerScript : MonoBehaviour
             
             jumping = true;
             jumpVelocityUpdated = false;
+            
+            if (Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed)
+                stillJump = true;
 
             trackedRiseTime = 0f;
             currentJumpVal = initialJumpVel;
@@ -159,13 +164,18 @@ public class PlayerScript : MonoBehaviour
             else
                 currentJumpVal -= jumpIncr;
 
-            velocityForJumping.x = playerRB.linearVelocityX;
+            if (stillJump)
+                velocityForJumping.x = 0f;
+            else
+                velocityForJumping.x = playerRB.linearVelocityX;
+
             velocityForJumping.y = currentJumpVal;
 
             playerRB.linearVelocity = velocityForJumping;
         }
     }
 
+    private bool solidHitLanded = false;
     private GameObject onCollisionEnterGameObject;
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -179,7 +189,7 @@ public class PlayerScript : MonoBehaviour
             //sometimes the game would have a collision the same frame jump began
             //and abruptly cut it off. This second check fixed it.
             {
-                jumping = false;
+                jumping = stillJump = false;
                 playerAR.SetBool("Jumping", false);
                 playerAR.SetBool("Jump Landing Done", false);
             }
@@ -187,11 +197,14 @@ public class PlayerScript : MonoBehaviour
         
         else if (onCollisionEnterGameObject.layer == landingLayersDict["Island Under Layer"])
             currentJumpVal = 0f;
+
+        if (onCollisionEnterGameObject.CompareTag("MushroomHitBox"))
+            solidHitLanded = true;
     }
 
     private void JumpLandingDone() //For animator use only
     {
-        playerAR.SetBool("Jump Landing Done" , true);
+        playerAR.SetTrigger("Jump Landing Done");
     }
 
     [SerializeField] private float gravityMulitplier = 7f;
@@ -234,7 +247,10 @@ public class PlayerScript : MonoBehaviour
                 attackThree = true;
 
             else
-                attacking = attackTwo = attackThree = false;
+            {
+                attacking = true;
+                attackTwo = attackThree = false;
+            }
         }
 
         else
@@ -268,7 +284,10 @@ public class PlayerScript : MonoBehaviour
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     private bool DoingSomething()
     {
-        if (jumping)
+        if (solidHitLanded)
+            return true;
+
+        else if (jumping)
             return true;
 
         else if (dashing)
@@ -292,6 +311,9 @@ public class PlayerScript : MonoBehaviour
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void SetState()
     {
+        if (solidHitLanded)
+            playerState = PlayerState.ReceivedHit;
+
         if (jumping)
             playerState = PlayerState.Jump;
 
@@ -301,10 +323,10 @@ public class PlayerScript : MonoBehaviour
         else if (attacking)
             playerState = PlayerState.Attack;
 
-        else if (Mathf.Abs(playerRB.linearVelocityX) > 0.01f)
+        else if (Mathf.Abs(playerRB.linearVelocityX) > playerZeroSpeed)
             playerState = PlayerState.Sprint;
 
-        else if (Mathf.Abs(playerRB.linearVelocityX) <= 0.01f)
+        else if (Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed)
             playerState = PlayerState.Idle;
     }
 
@@ -317,7 +339,6 @@ public class PlayerScript : MonoBehaviour
         {
             playerAR.SetBool("Sprinting", false);
             playerAR.SetBool("Dashing", false);
-            playerAR.SetBool("Attacking", false);
         }
 
         else if (playerState == PlayerState.Sprint)
@@ -338,7 +359,16 @@ public class PlayerScript : MonoBehaviour
 
         else if (playerState == PlayerState.Attack)
         {
-            playerAR.SetBool("Attacking" , true);
+            playerAR.SetTrigger("Attacking");
+        }
+
+        else if (playerState == PlayerState.ReceivedHit)
+        {
+            playerAR.SetBool("Sprinting", false);
+            playerAR.SetBool("Dashing", false);
+            playerAR.SetBool("Jumping", false);
+
+            //playerAR
         }
 
         DirectionSetting();
@@ -347,7 +377,7 @@ public class PlayerScript : MonoBehaviour
     private Vector2 attackHitBoxDirectioning = new Vector2(0 , 0);
     private void DirectionSetting()
     {
-        if (Mathf.Abs(playerRB.linearVelocityX) <= 0.01f)
+        if (Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed)
             playerSR.flipX = playerSR.flipX;
 
         else
