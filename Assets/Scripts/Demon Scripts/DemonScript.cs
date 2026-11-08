@@ -3,7 +3,6 @@ using UnityEngine;
 public class DemonScript : MonsterScript
 {
     private DemonStates demonState;
- 
     private enum DemonStates
     {
         Idle = 0,
@@ -28,10 +27,15 @@ public class DemonScript : MonsterScript
 
     void Update()
     {
-        DemonMove();
-        
-        if (!attacking)
-            MonsterDetectAttack();
+        if (!dead)
+        {
+            DemonMove();
+
+            if (!attacking)
+                MonsterDetectAttack();
+
+            DirectionSetting();
+        }
 
         SetState();
         StateEffects();
@@ -40,9 +44,7 @@ public class DemonScript : MonsterScript
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     private void DemonMove()
     {
-        if (dead) ;
-
-        else if (!attacking)
+        if (!attacking)
             MonsterBaseMove();
 
         else if (attacking)
@@ -88,8 +90,10 @@ public class DemonScript : MonsterScript
     }
 
 
-                                private Vector3 leftAttackOffset = new Vector3(-0.5f, 0.5f, 0);
-                                private Vector3 rightAttackOffset = new Vector3(0.5f, 0.5f, 0);
+                                private Vector3 leftAttackOffset = new Vector3(-horizontalOffset, verticalOffset, 0);
+                                private Vector3 rightAttackOffset = new Vector3(horizontalOffset, verticalOffset, 0);
+                                private const float verticalOffset = 0.4f;
+                                private const float horizontalOffset = 0.5f;
                                 private const float demonAttackSpeed = 4.5f;
     protected override void MonsterAttackMove()
     {
@@ -145,7 +149,7 @@ public class DemonScript : MonsterScript
         {
             if (movePhase == 1)
                 transform.Translate(deathSpriteOffset);
-            
+
             else if (movePhase == 3)
                 transform.Translate(-deathSpriteOffset);
 
@@ -166,11 +170,6 @@ public class DemonScript : MonsterScript
             demonState = DemonStates.Death;
         else if (attacking)
             demonState = DemonStates.BreathAttack;
-
-        if (movePhase == 1)
-            monsterSR.flipX = false;
-        else if (movePhase == 3)
-            monsterSR.flipX = true;
     }
 
     protected override void StateEffects()
@@ -180,6 +179,30 @@ public class DemonScript : MonsterScript
         
         else if (demonState == DemonStates.BreathAttack)
             monsterAR.SetBool("Attacking" , true);
+    }
+
+
+                                    private Vector2 hitBoxLocation = new Vector2(0, hitBoxLocationY);
+                                    private const float hitBoxLocationY = -0.53f;
+    private void DirectionSetting()
+    {
+        if ((movePhase == 0) || (movePhase == 2))
+            monsterSR.flipX = monsterSR.flipX;
+
+        else if (movePhase == 1)
+            monsterSR.flipX = false;
+
+        else
+            monsterSR.flipX = true;
+
+        SetHitBoxBasedOnDirection();
+    }
+
+                                    private const float colliderXOffset = 0.72f;
+    private void SetHitBoxBasedOnDirection()
+    {
+        hitBoxLocation.x = (monsterSR.flipX ? colliderXOffset : -colliderXOffset);
+        attackCollider.offset = hitBoxLocation;
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
 }

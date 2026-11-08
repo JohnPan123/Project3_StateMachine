@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -16,6 +15,7 @@ public class PlayerScript : MonoBehaviour
 
     private float playerHealth = 100f;
     private const float playerZeroSpeed = 0.1f;
+    private const float entrySpeed = 7.77f;
 
     [SerializeField] private List<BoxCollider2D> attackHitBoxes;
     private Dictionary<string, int> landingLayersDict = new Dictionary<string , int>();
@@ -51,6 +51,9 @@ public class PlayerScript : MonoBehaviour
 
         playerName = gameObject.name;
         playerState = PlayerState.Idle;
+        playerRB.linearVelocity = Vector2.down * entrySpeed;
+
+        this.enabled = false;
     }
 
     private void FixedUpdate()
@@ -219,7 +222,10 @@ public class PlayerScript : MonoBehaviour
         }
         
         else if (onCollisionEnterGameObject.layer == landingLayersDict["Island Under Layer"])
-            currentJumpVal = 0f;
+        {
+            if (playerRB.linearVelocityY < playerZeroSpeed)
+                currentJumpVal = 0f;
+        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -342,6 +348,12 @@ public class PlayerScript : MonoBehaviour
     private void DebugFunction()
     {
         Debug.Log($"Solid Hit: {solidHitLanded} || Jumping: {jumping} || Dashing: {dashing} || Attacking: {attacking}");
+    }
+
+    private void EnableScript() //For animator use only
+    {
+        this.enabled = true;
+        playerAR.SetBool("Entered Level" , true);
     }
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     //--------------------------------------------------|  PLAYER HEALTH FUNCTIONS
