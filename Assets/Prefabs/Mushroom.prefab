@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6e587ad044995488772a705449ca5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PHBMushroomScript
+  mushroom: {fileID: 4318863433741336643}
   attackingLandingHitBox: {fileID: 4979406862346248941}
 --- !u!61 &400649496130167758
 BoxCollider2D:

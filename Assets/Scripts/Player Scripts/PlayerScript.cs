@@ -231,7 +231,7 @@ public class PlayerScript : MonoBehaviour
             attacking = jumping = dashing = false;
 
             //Handles stagger movement and direction
-            if (onCollisionEnterGameObject.transform.position.x > transform.position.x) 
+            if (onCollisionEnterGameObject.GetComponent<ALHBMushroomScript>().GetParent.transform.position.x > transform.position.x) 
             {
                 staggerMovement.x = -staggerMovementSpeed;
 

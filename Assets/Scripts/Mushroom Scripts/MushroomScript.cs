@@ -34,10 +34,10 @@ public class MushroomScript : MonsterScript
     }
     void Update()
     {
-        //DebugFunction();
+        DebugFunction();
         if (!dead)
         {
-            if (attacking) ;
+            if (attacking || flinching) ;
             else if (idleAfterFlinchingBool)
                 AfterFlinchingIdle();
             else if (idleAfterAttackBool)
@@ -164,11 +164,11 @@ public class MushroomScript : MonsterScript
                                 private bool needToSetAttackTriggerForAnimator = true;
     public void IsAttacking()
     {
-        attackCollider.gameObject.SetActive(false);
+        DisableAttackDetectorCollider();
 
         attackMove = false;
-        attacking = true;
-        needToSetAttackTriggerForAnimator = true;
+        attacking = needToSetAttackTriggerForAnimator = true;
+
         //Sets attack direction based on player direction
         monsterSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false); 
         SetHitBoxBasedOnDirection();
@@ -207,7 +207,7 @@ public class MushroomScript : MonsterScript
         if (afterAttackIdleTimeTracker >= idleAfterAttackTime)
         {
             attackCollider.gameObject.SetActive(true);
-            idleAfterAttackBool = attackMove = false;
+            idleAfterAttackBool = false;
         }
 
         mushroomRB.linearVelocity = Vector2.zero;
@@ -247,6 +247,9 @@ public class MushroomScript : MonsterScript
 
         if ((!dead) && (objectOfTriggerCollision.layer == playerAttackTriggerColliderLayer))
         {
+            if (attackCollider.gameObject.activeSelf)
+                DisableAttackDetectorCollider();
+
             flinching = needToRegisterReceivedHitTriggerForAnimator = true;
 
             attacking = attackMove = idleAfterAttackBool = idleAfterFlinchingBool = false;
@@ -255,6 +258,10 @@ public class MushroomScript : MonsterScript
 
     }
 
+    private void DisableAttackDetectorCollider()
+    {
+        attackCollider.gameObject.SetActive(false);
+    }
     //--------------------------------------------------| RECEIVE ATTACK FUNCTIONS
     //--------------------------------------------------| HEALTH FUNCTIONS
     private bool dead = false;
@@ -352,6 +359,6 @@ public class MushroomScript : MonsterScript
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void DebugFunction()
     {
-        Debug.Log($"Attacking: {attacking} || AttackMove: {attackMove} || TookHit: {flinching} || State: {mushroomState}");
+        Debug.Log($"Attacking: {attacking} || AttackMove: {attackMove} || Flinching: {flinching} || State: {mushroomState}");
     }
 }
