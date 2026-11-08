@@ -31,10 +31,12 @@ public class MushroomScript : MonsterScript
     {
         if (!(idleAfterAttackBool || idleAfterFlinchingBool || attacking || flinching || dead))
             MushroomMove();
+        else if (attacking)
+            AttackMove();
     }
     void Update()
     {
-        DebugFunction();
+        //DebugFunction();
         if (!dead)
         {
             if (attacking || flinching) ;
@@ -140,17 +142,19 @@ public class MushroomScript : MonsterScript
     }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACK FUNCTIONS
-                                private const float verticalViewRange = 0.7f;
+                                private const float verticalViewRange = 0.3f;
                                 private const float horizontalViewRange = 3f;
                                 private Vector3 mushroomHeightOffset = new Vector3(0 , 0.5f , 0);
                                 private Vector2 rayDirection = new Vector2(0 , 0);
                                 private bool attackMove = false;
     protected override void MonsterDetectAttack()
     {
-        for (float verticalComponenet = -0.35f ; verticalComponenet <= verticalViewRange ; verticalComponenet += (0.35f / 2))
+        for (float verticalComponenet = (-verticalViewRange) ; verticalComponenet <= verticalViewRange ; verticalComponenet += (verticalViewRange))
         {
             rayDirection.x = (monsterSR.flipX ? 1 : -1) * horizontalViewRange;
             rayDirection.y = verticalComponenet;
+
+            Debug.DrawLine(transform.position - mushroomHeightOffset, transform.position - mushroomHeightOffset + (Vector3)rayDirection,Color.red);
 
             if (Physics2D.Raycast(transform.position - mushroomHeightOffset , 
                 rayDirection, rayDirection.magnitude , playerLayer))
@@ -174,6 +178,11 @@ public class MushroomScript : MonsterScript
         SetHitBoxBasedOnDirection();
     } //For AHBMushroom Script
 
+    private const float attackMoveVectorMagnitude = 0.5f;
+    private void AttackMove()
+    {
+        mushroomRB.linearVelocity = (player.transform.position - transform.position).normalized * attackMoveVectorMagnitude;
+    }
     public void EnableHitBoxForAttack() //For animator
     {
         attackLanderHB.SetActive(true);

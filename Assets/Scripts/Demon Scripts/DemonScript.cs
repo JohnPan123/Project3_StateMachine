@@ -18,8 +18,6 @@ public class DemonScript : MonsterScript
         monsterAR = GetComponent<Animator>();
         monsterSR = GetComponent<SpriteRenderer>();
 
-        attackCollider.enabled = false;
-
         demonState = DemonStates.Idle;
 
         monsterHealth = 3;
