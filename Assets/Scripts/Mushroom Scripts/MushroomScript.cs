@@ -1,12 +1,9 @@
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 public class MushroomScript : MonsterScript
 {
     [SerializeField] private int playerAttackTriggerColliderLayer;
-    [SerializeField] private GameObject physicsAttackHB;
-    private BoxCollider2D physicsHBCollider;
-    private Rigidbody2D physicsHBRB;
+    [SerializeField] private GameObject attackLanderHB;
 
     private Rigidbody2D mushroomRB;
     private MushroomStates mushroomState;
@@ -26,16 +23,13 @@ public class MushroomScript : MonsterScript
         monsterSR = GetComponent<SpriteRenderer>();
         mushroomRB = GetComponent<Rigidbody2D>();
 
-        physicsHBCollider = physicsAttackHB.GetComponent<BoxCollider2D>();
-        physicsHBRB = physicsAttackHB.GetComponent<Rigidbody2D>();
-
         mushroomState = MushroomStates.Idle;
         monsterHealth = 3;
     }
 
     private void FixedUpdate()
     {
-        if (!(idleAfterAttackBool || attacking || dead))
+        if (!(idleAfterAttackBool || idleAfterFlinchingBool || attacking || flinching || dead))
             MushroomMove();
     }
     void Update()
@@ -43,8 +37,9 @@ public class MushroomScript : MonsterScript
         //DebugFunction();
         if (!dead)
         {
-            if (attacking)
-                ;
+            if (attacking) ;
+            else if (idleAfterFlinchingBool)
+                AfterFlinchingIdle();
             else if (idleAfterAttackBool)
                 AfterAttackIdle();
             else
@@ -143,11 +138,6 @@ public class MushroomScript : MonsterScript
             mushroomRB.linearVelocity = moveVectorAttack;
         }
     }
-
-    private void MushroomNotMoving()
-    {
-        mushroomRB.linearVelocity = mushroomRB.linearVelocity;
-    }
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACK FUNCTIONS
                                 private const float verticalViewRange = 0.7f;
@@ -171,63 +161,101 @@ public class MushroomScript : MonsterScript
         }
     }
 
-    private bool needToSetAttackTriggerForAnimator = true;
+                                private bool needToSetAttackTriggerForAnimator = true;
     public void IsAttacking()
     {
+        attackCollider.gameObject.SetActive(false);
+
         attackMove = false;
         attacking = true;
         needToSetAttackTriggerForAnimator = true;
-
-        if (player.transform.position.x > transform.position.x) //Sets direction
-            monsterSR.flipX = true;
-        else
-            monsterSR.flipX = false;
-
-        hitBoxLocation.x = (monsterSR.flipX ? Mathf.Abs(attackCollider.offset.x) : -Mathf.Abs(attackCollider.offset.x));
-        attackCollider.offset = hitBoxLocation;
+        //Sets attack direction based on player direction
+        monsterSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false); 
+        SetHitBoxBasedOnDirection();
     } //For AHBMushroom Script
 
-
-                                    private Vector2 attackHBV = new Vector2(attackHBSpeed, 0);
-                                    private const float attackHBSpeed = 7f;
     public void EnableHitBoxForAttack() //For animator
     {
-        physicsAttackHB.SetActive(true);
-        physicsAttackHB.GetComponent<BoxCollider2D>().offset = attackCollider.offset;
+        attackLanderHB.SetActive(true);
+        attackLanderHB.GetComponent<BoxCollider2D>().offset = attackCollider.offset;
     }
-    public void DisableHitBox() //For animator
+    public void DisableHitBoxForAttack() //For animator and animator functions
     {
-        physicsAttackHB.GetComponent<BoxCollider2D>().offset = Vector2.zero;
-        physicsAttackHB.SetActive(false);
+        if (attackLanderHB.activeSelf)
+        {
+            attackLanderHB.GetComponent<BoxCollider2D>().offset = Vector2.zero;
+            attackLanderHB.SetActive(false);
+        }
     }
 
-                                    private const float idleAfterAttack = 0.5f;
                                     private float afterAttackIdleTimeTracker = 0f;
                                     private bool idleAfterAttackBool = false;
-    private void AfterAttackIdle()
-    {
-        afterAttackIdleTimeTracker += Time.deltaTime;
-        attacking = attackMove = false;
-
-        if (afterAttackIdleTimeTracker >= idleAfterAttack)
-        {
-            attackCollider.gameObject.SetActive(true);
-            idleAfterAttackBool = tookHit = false;
-            afterAttackIdleTimeTracker = 0f;
-        }
-
-        mushroomRB.linearVelocity = Vector2.zero;
-    }
-
     private void IsDoneAttacking() //For animator use.
     {
         attacking = false;
         idleAfterAttackBool = true;
+        afterAttackIdleTimeTracker = 0f;
 
-        if (physicsAttackHB.activeSelf)
-            physicsAttackHB.SetActive(false);
+        DisableHitBoxForAttack();
+    }
+
+                                    private const float idleAfterAttackTime = 1.3f;
+    private void AfterAttackIdle()
+    {
+        afterAttackIdleTimeTracker += Time.deltaTime;
+
+        if (afterAttackIdleTimeTracker >= idleAfterAttackTime)
+        {
+            attackCollider.gameObject.SetActive(true);
+            idleAfterAttackBool = attackMove = false;
+        }
+
+        mushroomRB.linearVelocity = Vector2.zero;
     }
     //--------------------------------------------------| ATTACK FUNCTIONS
+    //--------------------------------------------------| RECEIVE ATTACK FUNCTIONS
+                                    private bool idleAfterFlinchingBool = false;
+    private void IsDoneFlinching()
+    {
+        flinching = false;
+        idleAfterFlinchingBool = true;
+        afterFlinchingIdleTimeTracker = 0f;
+        //The disable hit box is run at the start of the animation event. Not need to run it again.
+    }
+
+                                    private float afterFlinchingIdleTimeTracker = 0f;
+                                    private const float idleAfterFlinchingTime = 1.3f;
+    private void AfterFlinchingIdle()
+    {
+        afterFlinchingIdleTimeTracker += Time.deltaTime;
+
+        if (afterFlinchingIdleTimeTracker >= idleAfterFlinchingTime)
+        {
+            attackCollider.gameObject.SetActive(true);
+            idleAfterFlinchingBool = attackMove = false;
+        }
+
+        mushroomRB.linearVelocity = Vector2.zero;
+    }
+    private bool flinching, needToRegisterReceivedHitTriggerForAnimator = false;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        GameObject objectOfTriggerCollision = collision.gameObject;
+
+        //Sets direction based only incoming attack direction
+        monsterSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false);
+
+        if ((!dead) && (objectOfTriggerCollision.layer == playerAttackTriggerColliderLayer))
+        {
+            flinching = needToRegisterReceivedHitTriggerForAnimator = true;
+
+            attacking = attackMove = idleAfterAttackBool = idleAfterFlinchingBool = false;
+            afterFlinchingIdleTimeTracker = afterAttackIdleTimeTracker = 0f;
+        }
+
+    }
+
+    //--------------------------------------------------| RECEIVE ATTACK FUNCTIONS
     //--------------------------------------------------| HEALTH FUNCTIONS
     private bool dead = false;
     public override void LoseHealth(int healthLost)
@@ -241,19 +269,6 @@ public class MushroomScript : MonsterScript
         }
     }
 
-    private bool tookHit , needToRegisterReceivedHitTriggerForAnimator = false;
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        GameObject objectOfTriggerCollision = collision.gameObject;
-        
-        if (dead) 
-            ;
-        else if (objectOfTriggerCollision.layer == playerAttackTriggerColliderLayer)
-        {
-            Debug.Log(true);
-            tookHit = needToRegisterReceivedHitTriggerForAnimator = true;
-        }
-    }
     protected override void Death()
     {
         Destroy(gameObject);
@@ -265,19 +280,20 @@ public class MushroomScript : MonsterScript
         if (dead)
             mushroomState = MushroomStates.Death;
 
-        else if (tookHit)
-            mushroomState = MushroomStates.TookHit;
 
-        else if (idleAfterAttackBool)
+        else if (idleAfterAttackBool || idleAfterFlinchingBool)
             mushroomState = MushroomStates.Idle;
+
+        else if (flinching)
+            mushroomState = MushroomStates.TookHit;
 
         else if (attacking)
             mushroomState = MushroomStates.Attack;
 
-        else if (Mathf.Abs(mushroomRB.linearVelocityX) > 0.01f)
+        else if (Mathf.Abs(mushroomRB.linearVelocityX) > 0.1f)
             mushroomState = MushroomStates.Move;
 
-        else if (mushroomRB.linearVelocityX <= 0.01f)
+        else if (mushroomRB.linearVelocityX <= 0.1f)
             mushroomState = MushroomStates.Idle;
 
         DirectionSetting();
@@ -294,7 +310,6 @@ public class MushroomScript : MonsterScript
             {
                 monsterAR.SetTrigger("Took Damage");
                 needToRegisterReceivedHitTriggerForAnimator = false;
-                Debug.Log(false);
             }
         }
 
@@ -324,14 +339,19 @@ public class MushroomScript : MonsterScript
         else
         {
             monsterSR.flipX = (mushroomRB.linearVelocityX < 0 ? false : true);
-
-            hitBoxLocation.x = (monsterSR.flipX ? Mathf.Abs(attackCollider.offset.x) : -Mathf.Abs(attackCollider.offset.x));
-            attackCollider.offset = hitBoxLocation;
+            SetHitBoxBasedOnDirection();
         }
+    }
+
+    private const float colliderXOffset = 0.11f;
+    private void SetHitBoxBasedOnDirection()
+    {
+        hitBoxLocation.x = (monsterSR.flipX ? colliderXOffset : -colliderXOffset);
+        attackCollider.offset = hitBoxLocation;
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void DebugFunction()
     {
-        Debug.Log($"Attacking: {attacking} || AttackMove: {attackMove} || TookHit: {tookHit} || State: {mushroomState}");
+        Debug.Log($"Attacking: {attacking} || AttackMove: {attackMove} || TookHit: {flinching} || State: {mushroomState}");
     }
 }

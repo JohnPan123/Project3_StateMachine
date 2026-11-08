@@ -230,7 +230,8 @@ public class PlayerScript : MonoBehaviour
             solidHitLanded = animationDamageTrigger = true;
             attacking = jumping = dashing = false;
 
-            if (onCollisionEnterGameObject.transform.position.x > transform.position.x)
+            //Handles stagger movement and direction
+            if (onCollisionEnterGameObject.transform.position.x > transform.position.x) 
             {
                 staggerMovement.x = -staggerMovementSpeed;
 
@@ -251,7 +252,7 @@ public class PlayerScript : MonoBehaviour
 
         }
     }
-    private bool animationDamageTrigger = false;
+                                    private bool animationDamageTrigger = false;
     private void FinishedTakingDamage() //For animator
     {
         solidHitLanded = otherDirection = sameDirection = false;

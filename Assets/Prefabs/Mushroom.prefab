@@ -206,7 +206,7 @@ MonoBehaviour:
     m_Bits: 1
   attackCollider: {fileID: 8357291425209901478}
   playerAttackTriggerColliderLayer: 12
-  physicsAttackHB: {fileID: 4979406862346248941}
+  attackLanderHB: {fileID: 4979406862346248941}
   distanceToChangeMove: 3.25
   idleTime: 2
 --- !u!70 &-8197012094160435542
@@ -312,7 +312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1632638514027959792
 Transform:
   m_ObjectHideFlags: 0
@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6e587ad044995488772a705449ca5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PHBMushroomScript
-  physicsHB: {fileID: 4979406862346248941}
+  attackingLandingHitBox: {fileID: 4979406862346248941}
 --- !u!61 &400649496130167758
 BoxCollider2D:
   m_ObjectHideFlags: 0
