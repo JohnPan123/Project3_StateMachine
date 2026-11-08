@@ -8,7 +8,7 @@ public abstract class MonsterScript : MonoBehaviour
     protected SpriteRenderer monsterSR;
     protected Animator monsterAR;
 
-    protected int monsterHealth;
+    [SerializeField] protected int monsterHealth = 3;
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     protected abstract void MonsterBaseMove();
     protected abstract void MonsterAttackMove();

@@ -24,7 +24,6 @@ public class MushroomScript : MonsterScript
         mushroomRB = GetComponent<Rigidbody2D>();
 
         mushroomState = MushroomStates.Idle;
-        monsterHealth = 3;
     }
 
     private void FixedUpdate()

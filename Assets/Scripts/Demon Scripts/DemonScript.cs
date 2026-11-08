@@ -101,13 +101,11 @@ public class DemonScript : MonsterScript
         if (transform.position.x < player.transform.position.x)
         {
             moveVector = (player.transform.position - transform.position + leftAttackOffset).normalized;
-            
             movePhase = 3;
         }
         else
         {
             moveVector = (player.transform.position - transform.position + rightAttackOffset).normalized;
-            
             movePhase = 1;
         }
 
@@ -117,16 +115,19 @@ public class DemonScript : MonsterScript
     //--------------------------------------------------| ATTACKING FUNCTIONS
 
 
-                                private const float verticalViewRange = 1f;
+                                private const float verticalViewRange = 1.2f;
+                                private const float verticalViewIncr = verticalViewRange / 3f;
                                 private const float horizontalViewRange = 3f;
                                 private Vector2 rayDirection = new Vector2(0 , 0);
                                 private bool attacking = false;
     protected override void MonsterDetectAttack()
     {
-        for (float verticalComponenet = 0f ; verticalComponenet <= verticalViewRange ; verticalComponenet += 0.2f)
+        for (float verticalComponenet = 0f ; verticalComponenet < verticalViewRange ; verticalComponenet += verticalViewIncr)
         {
             rayDirection.x = (monsterSR.flipX ? 1 : -1) * horizontalViewRange;
             rayDirection.y = -verticalComponenet;
+
+            Debug.DrawLine(transform.position, transform.position + (Vector3)rayDirection, Color.blue);
 
             if (Physics2D.Raycast(transform.position, rayDirection, rayDirection.magnitude, playerLayer))
             {
