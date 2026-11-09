@@ -203,6 +203,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   attackCollider: {fileID: 7392221522276097450}
+  monsterHealth: 3
   timeToChangeMove: 1
 --- !u!70 &2534523176075248551
 CapsuleCollider2D:

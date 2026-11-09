@@ -205,6 +205,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   attackCollider: {fileID: 8357291425209901478}
+  monsterHealth: 3
   playerAttackTriggerColliderLayer: 12
   attackLanderHB: {fileID: 4979406862346248941}
   distanceToChangeMove: 3.25

@@ -7,8 +7,14 @@ public class HealthBarScript : MonoBehaviour
     private PlayerScript playerScript;
 
     private Slider healthSlider;
+    [SerializeField] private Image sliderThatIsColored;
 
     private const float playerMaxHeatlh = 100f;
+    private float playerHealth;
+    private bool updatedMidHealthColor = false;
+    private const float midHealthValue = 50f;
+    private bool updatedLowHealthColor = false;
+    private const float lowHealthValue = 20f;
 
     void Start()
     {
@@ -19,6 +25,20 @@ public class HealthBarScript : MonoBehaviour
     }
     void Update()
     {
-        healthSlider.value = playerScript.GetPlayerHealth;
+        playerHealth = playerScript.GetPlayerHealth;
+        healthSlider.value = playerHealth;
+
+        if (!updatedMidHealthColor && (playerHealth <= midHealthValue))
+        {
+            sliderThatIsColored.color = Color.yellow;
+            updatedMidHealthColor = true;
+        }
+
+        else if (!updatedLowHealthColor && (playerHealth <= lowHealthValue))
+        {
+            sliderThatIsColored.color = Color.red;
+            updatedLowHealthColor = true;
+        }
+
     }
 }

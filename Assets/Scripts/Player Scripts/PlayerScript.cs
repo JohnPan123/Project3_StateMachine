@@ -30,7 +30,8 @@ public class PlayerScript : MonoBehaviour
         Jump = 2,
         Dash = 3,
         Attack = 4,
-        ReceivedHit = 5
+        ReceivedHit = 5,
+        Dead = 6
     }
 
     void Start()
@@ -60,22 +61,28 @@ public class PlayerScript : MonoBehaviour
     {
         ExecuteGravity();
 
-        if (solidHitLanded)
-            StaggerMovement();
-        else
-            HorizontalMovement();
+        if (!dead)
+        {
+            if (solidHitLanded)
+                StaggerMovement();
+            else
+                HorizontalMovement();
 
-        ExecuteJump();
-        ExecuteDash();
-        ExecuteAttack();
+            ExecuteJump();
+            ExecuteDash();
+            ExecuteAttack();
+        }   
     }
     void Update()
     {
         //DebugFunction();
 
-        CheckForJump();
-        CheckForDash();
-        CheckForAttack();
+        if (!dead)
+        {
+            CheckForJump();
+            CheckForDash();
+            CheckForAttack();
+        }
 
         SetState();
         StateEffects();
@@ -99,12 +106,17 @@ public class PlayerScript : MonoBehaviour
 
 
                                     private bool dashing = false;
+                                    private const float timeBetweenDashes = 3f;
+                                    private float dashTimeTracker = timeBetweenDashes;
     private void CheckForDash()
     {
-        if (!DoingSomething() && dashInput.triggered)
+        dashTimeTracker += Time.deltaTime;
+
+        if (!DoingSomething() && (dashTimeTracker >= timeBetweenDashes) && dashInput.triggered)
         {
             direction = horizontalMovementInput.ReadValue<float>();
             dashing = true;
+            dashTimeTracker = 0;
             
             currentDashSpeed = dashSpeedPeak * direction;
             sprintSpeedForDashing = sprintSpeed * direction;
@@ -135,6 +147,7 @@ public class PlayerScript : MonoBehaviour
                 dashing = false;
         }
     }
+    public float DashBarPercentToFill => (dashTimeTracker / timeBetweenDashes);
 
 
                                     private bool jumping = false;
@@ -287,14 +300,16 @@ public class PlayerScript : MonoBehaviour
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     //--------------------------------------------------| ATTACKING FUNCTIONS
                                     private bool attacking = false;
+                                    private bool attackTriggerVariable = false;
                                     private bool nextAttackConfirmed = false;
     private void CheckForAttack()
     {
         if (!DoingSomething() && attackInput.triggered)
-            attacking = nextAttackConfirmed = true;
+            attacking = attackTriggerVariable = true;
 
         else if (attacking && attackInput.triggered)
-            nextAttackConfirmed = true;
+            nextAttackConfirmed = attackTriggerVariable = true;
+        
     }
 
     private void CheckForNextAttack() //For use by animator
@@ -357,16 +372,32 @@ public class PlayerScript : MonoBehaviour
     }
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     //--------------------------------------------------|  PLAYER HEALTH FUNCTIONS
+                                        private bool dead = false;
     public void HealthLost(float healthLost)
     {
         playerHealth -= healthLost;
+        
+        if (playerHealth <= 0)
+        {
+            dead = true;
+            GameOverTextScript.victory = false;
+        }
     }
+
+    private void GameOver() //For animator use only
+    {
+        ChangeScene.ChangeSceneFunction("Game End Scene");
+    }
+
     public float GetPlayerHealth => playerHealth;
     //--------------------------------------------------| PLAYER HEALTH FUNCTIONS
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void SetState()
     {
-        if (solidHitLanded)
+        if (dead)
+            playerState = PlayerState.Dead;
+
+        else if (solidHitLanded)
             playerState = PlayerState.ReceivedHit;
 
         else if (jumping)
@@ -412,8 +443,11 @@ public class PlayerScript : MonoBehaviour
 
         else if (playerState == PlayerState.Attack)
         {
-            if (nextAttackConfirmed)
+            if (attackTriggerVariable)
+            {
                 playerAR.SetTrigger("Attacking");
+                attackTriggerVariable = false;
+            }
         }
 
         else if (playerState == PlayerState.ReceivedHit)
@@ -431,8 +465,10 @@ public class PlayerScript : MonoBehaviour
 
                 animationDamageTrigger = false;
             }
-            
         }
+
+        else if (playerState == PlayerState.Dead)
+            playerAR.SetTrigger("Dead");
 
         DirectionSetting();
     }
