@@ -75,7 +75,7 @@ public class PlayerScript : MonoBehaviour
     }
     void Update()
     {
-        //DebugFunction();
+        DebugFunction(false , true);
 
         if (!dead)
         {
@@ -126,9 +126,13 @@ public class PlayerScript : MonoBehaviour
 
                                     private Vector2 velocityForDashing = new Vector2();
                                     private const float dashSpeedPeak = 20f;
+                                    private const float consideredLeftGroundForRaycaseCheck = 0.96f;
+                                    private const float rayCastDistance = 1.3f;
+                                    private float distanceFromGround;
                                     private float sprintSpeedForDashing = 5f;
                                     private float currentDashSpeed;
                                     private float direction;
+                                    private bool notOnGroundBecauseOfDash = false;
     private void ExecuteDash()
     {
         if (dashing)
@@ -139,7 +143,16 @@ public class PlayerScript : MonoBehaviour
                 currentDashSpeed = Mathf.Lerp(currentDashSpeed, sprintSpeedForDashing , 0.3f);
 
             velocityForDashing.x = currentDashSpeed;
-            velocityForDashing.y = playerRB.linearVelocityY;
+
+            distanceFromGround = Physics2D.Raycast(transform.position, Vector2.down, rayCastDistance, landingLayersMask).distance;
+
+            if (distanceFromGround >= consideredLeftGroundForRaycaseCheck)
+            {
+                velocityForDashing.y = 0f;
+                notOnGroundBecauseOfDash = true;
+            }
+            else
+                velocityForDashing.y = playerRB.linearVelocityY;
 
             playerRB.linearVelocity = velocityForDashing;
 
@@ -223,6 +236,8 @@ public class PlayerScript : MonoBehaviour
         if (onCollisionEnterGameObject.layer == landingLayersDict["Ground Layer"] || onCollisionEnterGameObject.layer == landingLayersDict["Platform Layer"] ||
             onCollisionEnterGameObject.layer == landingLayersDict["Island Layer"])
         {
+            notOnGroundBecauseOfDash = false;
+
             if (jumping && (currentJumpVal != 5f))
             //If I did not have the second check (currentJumpVal != 5f),
             //sometimes the game would have a collision the same frame jump began
@@ -304,7 +319,7 @@ public class PlayerScript : MonoBehaviour
                                     private bool nextAttackConfirmed = false;
     private void CheckForAttack()
     {
-        if (!DoingSomething() && attackInput.triggered)
+        if (!DoingSomething() && attackInput.triggered && !notOnGroundBecauseOfDash)
             attacking = attackTriggerVariable = true;
 
         else if (attacking && attackInput.triggered)
@@ -360,9 +375,12 @@ public class PlayerScript : MonoBehaviour
             return false;
     }
 
-    private void DebugFunction()
+    private void DebugFunction(bool logData , bool playerRayDraw)
     {
-        Debug.Log($"Solid Hit: {solidHitLanded} || Jumping: {jumping} || Dashing: {dashing} || Attacking: {attacking}");
+        if (logData)
+            Debug.Log($"Solid Hit: {solidHitLanded} || Jumping: {jumping} || Dashing: {dashing} || Attacking: {attacking}");
+        if (playerRayDraw)
+        Debug.DrawRay(transform.position, Vector2.down * consideredLeftGroundForRaycaseCheck, Color.green);
     }
 
     private void EnableScript() //For animator use only

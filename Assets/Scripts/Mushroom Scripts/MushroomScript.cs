@@ -177,10 +177,14 @@ public class MushroomScript : MonsterScript
         SetHitBoxBasedOnDirection();
     } //For AHBMushroom Script
 
-                                private const float attackMoveVectorMagnitude = 2.5f;
+                                private const float attackMoveXMagnitude = 2.5f;
+                                private Vector2 velocityToHaveDuringAttack = new Vector2(0f, 0f);
     private void AttackMove()
     {
-        mushroomRB.linearVelocity = (player.transform.position - transform.position).normalized * attackMoveVectorMagnitude;
+        velocityToHaveDuringAttack.x = attackMoveXMagnitude * (player.transform.position.x > transform.position.x ? 1 : -1);
+        velocityToHaveDuringAttack.y = mushroomRB.linearVelocityY;
+
+        mushroomRB.linearVelocity = velocityToHaveDuringAttack;
     }
     public void EnableHitBoxForAttack() //For animator
     {
