@@ -6,7 +6,7 @@ public class EdgeColliderCreate : StageObjectScript
     [SerializeField] private SplineContainer splineContainer;
     [SerializeField] private EdgeCollider2D edgeCollider;
     [SerializeField] private int resolution;
-    void Start()
+    private void Start()
     {
         Spline mySpline = splineContainer.Spline;
         List<Vector2> localPointPositions = new List<Vector2>();

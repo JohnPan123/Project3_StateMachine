@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class GenericScript : MonoBehaviour
 {
-    protected string name;
-    
+    private static string playerName;
+    public static string PlayerName => playerName;
+    private void Start()
+    {
+        playerName = gameObject.name;
+    }
 }

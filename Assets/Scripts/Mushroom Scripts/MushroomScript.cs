@@ -15,9 +15,9 @@ public class MushroomScript : MonsterScript
         TookHit = 3,
         Death = 4
     }
-    void Start()
+    private void Start()
     {
-        player = GameObject.Find(PlayerScript.name);
+        player = GameObject.Find(GenericScript.PlayerName);
 
         objectAR = GetComponent<Animator>();
         objectSR = GetComponent<SpriteRenderer>();

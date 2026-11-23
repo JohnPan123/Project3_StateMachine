@@ -4,7 +4,7 @@ public abstract class MonsterScript : StageEntityScript
 {
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected BoxCollider2D attackCollider;
-    protected GameObject player;
+    [SerializeField] protected GameObject player;
 
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     protected abstract void MonsterBaseMove();

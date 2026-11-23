@@ -11,9 +11,9 @@ public class DemonScript : MonsterScript
         BreathAttack = 3
     }
 
-    void Start()
+    private void Start()
     {
-        player = GameObject.Find(PlayerScript.name);
+        player = GameObject.Find(GenericScript.PlayerName);
 
         objectAR = GetComponent<Animator>();
         objectSR = GetComponent<SpriteRenderer>();

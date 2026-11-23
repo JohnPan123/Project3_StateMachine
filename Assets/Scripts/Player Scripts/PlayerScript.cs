@@ -30,7 +30,7 @@ public class PlayerScript : StageEntityScript
         Dead = 6
     }
 
-    void Start()
+    private void Start()
     {
         horizontalMovementInput = InputSystem.actions.FindAction("Horizontal Movement");
         dashInput = InputSystem.actions.FindAction("Dash");
@@ -43,11 +43,7 @@ public class PlayerScript : StageEntityScript
         landingLayersDict.Add("Island Under Layer" , LayerMask.NameToLayer("IslandUnderPart"));
 
         playerRB = GetComponent<Rigidbody2D>();
-        objectAR = GetComponent<Animator>();
-        objectSR = GetComponent<SpriteRenderer>();
 
-
-        name = gameObject.name;
         health = 100f;
         playerState = PlayerState.Idle;
         playerRB.linearVelocity = Vector2.down * entrySpeed;
