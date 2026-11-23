@@ -17,10 +17,10 @@ public class MushroomScript : MonsterScript
     }
     void Start()
     {
-        player = GameObject.Find(PlayerScript.playerName);
+        player = GameObject.Find(PlayerScript.name);
 
-        monsterAR = GetComponent<Animator>();
-        monsterSR = GetComponent<SpriteRenderer>();
+        objectAR = GetComponent<Animator>();
+        objectSR = GetComponent<SpriteRenderer>();
         mushroomRB = GetComponent<Rigidbody2D>();
 
         mushroomState = MushroomStates.Idle;
@@ -150,7 +150,7 @@ public class MushroomScript : MonsterScript
     {
         for (float verticalComponenet = (-verticalViewRange) ; verticalComponenet <= verticalViewRange ; verticalComponenet += (verticalViewRange))
         {
-            rayDirection.x = (monsterSR.flipX ? 1 : -1) * horizontalViewRange;
+            rayDirection.x = (objectSR.flipX ? 1 : -1) * horizontalViewRange;
             rayDirection.y = verticalComponenet;
 
             Debug.DrawLine(transform.position - mushroomHeightOffset, transform.position - mushroomHeightOffset + (Vector3)rayDirection,Color.red);
@@ -173,7 +173,7 @@ public class MushroomScript : MonsterScript
         attacking = needToSetAttackTriggerForAnimator = true;
 
         //Sets attack direction based on player direction
-        monsterSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false); 
+        objectSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false); 
         SetHitBoxBasedOnDirection();
     } //For AHBMushroom Script
 
@@ -255,7 +255,7 @@ public class MushroomScript : MonsterScript
         GameObject objectOfTriggerCollision = collision.gameObject;
 
         //Sets direction based only incoming attack direction
-        monsterSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false);
+        objectSR.flipX = ((player.transform.position.x > transform.position.x) ? true : false);
 
         if ((!dead) && (objectOfTriggerCollision.layer == playerAttackTriggerColliderLayer))
         {
@@ -279,9 +279,9 @@ public class MushroomScript : MonsterScript
     private bool dead = false;
     public override void LoseHealth(int healthLost)
     {
-        monsterHealth -= healthLost;
+        health -= healthLost;
 
-        if (monsterHealth <= 0)
+        if (health <= 0)
         {
             dead = true;
             attackMove = false;
@@ -321,13 +321,13 @@ public class MushroomScript : MonsterScript
     protected override void StateEffects()
     {
         if (mushroomState == MushroomStates.Death)
-            monsterAR.SetTrigger("Dead");
+            objectAR.SetTrigger("Dead");
 
         else if (mushroomState == MushroomStates.TookHit)
         {
             if (needToRegisterReceivedHitTriggerForAnimator)
             {
-                monsterAR.SetTrigger("Took Damage");
+                objectAR.SetTrigger("Took Damage");
                 needToRegisterReceivedHitTriggerForAnimator = false;
             }
         }
@@ -336,16 +336,16 @@ public class MushroomScript : MonsterScript
         {
             if (needToSetAttackTriggerForAnimator)
             {
-                monsterAR.SetTrigger("Attack");
+                objectAR.SetTrigger("Attack");
                 needToSetAttackTriggerForAnimator = false;
             }
         }
 
         else if (mushroomState == MushroomStates.Move)
-            monsterAR.SetTrigger("Moving");
+            objectAR.SetTrigger("Moving");
 
         else if (mushroomState == MushroomStates.Idle)
-            monsterAR.SetTrigger("Idle");
+            objectAR.SetTrigger("Idle");
     }
 
     private Vector2 hitBoxLocation = new Vector2(0 , hitBoxLocationY);
@@ -353,11 +353,11 @@ public class MushroomScript : MonsterScript
     private void DirectionSetting()
     {
         if (Mathf.Abs(mushroomRB.linearVelocityX) <= 0.01f)
-            monsterSR.flipX = monsterSR.flipX;
+            objectSR.flipX = objectSR.flipX;
         
         else
         {
-            monsterSR.flipX = (mushroomRB.linearVelocityX < 0 ? false : true);
+            objectSR.flipX = (mushroomRB.linearVelocityX < 0 ? false : true);
             SetHitBoxBasedOnDirection();
         }
     }
@@ -365,7 +365,7 @@ public class MushroomScript : MonsterScript
     private const float colliderXOffset = 0.11f;
     private void SetHitBoxBasedOnDirection()
     {
-        hitBoxLocation.x = (monsterSR.flipX ? colliderXOffset : -colliderXOffset);
+        hitBoxLocation.x = (objectSR.flipX ? colliderXOffset : -colliderXOffset);
         attackCollider.offset = hitBoxLocation;
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS

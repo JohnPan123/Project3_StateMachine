@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Splines;
 using System.Collections.Generic;
-public class EdgeColliderCreate : MonoBehaviour
+public class EdgeColliderCreate : StageObjectScript
 {
     [SerializeField] private SplineContainer splineContainer;
     [SerializeField] private EdgeCollider2D edgeCollider;

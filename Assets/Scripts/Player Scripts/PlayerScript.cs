@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerScript : StageEntityScript
 {
     private InputAction horizontalMovementInput;
     private InputAction jumpInput;
@@ -10,10 +10,7 @@ public class PlayerScript : MonoBehaviour
     private InputAction attackInput;
 
     private Rigidbody2D playerRB;
-    private Animator playerAR;
-    private SpriteRenderer playerSR;
 
-    private float playerHealth = 100f;
     private const float playerZeroSpeed = 0.1f;
     private const float entrySpeed = 7.77f;
 
@@ -22,7 +19,6 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private LayerMask landingLayersMask;
     
     private PlayerState playerState;
-    public static string playerName;
     private enum PlayerState
     {
         Idle = 0,
@@ -47,14 +43,16 @@ public class PlayerScript : MonoBehaviour
         landingLayersDict.Add("Island Under Layer" , LayerMask.NameToLayer("IslandUnderPart"));
 
         playerRB = GetComponent<Rigidbody2D>();
-        playerAR = GetComponent<Animator>();
-        playerSR = GetComponent<SpriteRenderer>();
+        objectAR = GetComponent<Animator>();
+        objectSR = GetComponent<SpriteRenderer>();
 
-        playerName = gameObject.name;
+
+        name = gameObject.name;
+        health = 100f;
         playerState = PlayerState.Idle;
         playerRB.linearVelocity = Vector2.down * entrySpeed;
 
-        this.enabled = false;
+        this.enabled = false; //Wait for first animation to finish
     }
 
     private void FixedUpdate()
@@ -75,7 +73,7 @@ public class PlayerScript : MonoBehaviour
     }
     void Update()
     {
-        DebugFunction(false , true);
+        //DebugFunction(false , true);
 
         if (!dead)
         {
@@ -172,7 +170,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (!DoingSomething() && jumpInput.triggered)
         {
-            playerAR.SetFloat("Vertical Speed" , initialJumpVel);
+            objectAR.SetFloat("Vertical Speed" , initialJumpVel);
             
             jumping = true;
             jumpVelocityUpdated = false;
@@ -244,8 +242,8 @@ public class PlayerScript : MonoBehaviour
             //and abruptly cut it off. This second check fixed it.
             {
                 jumping = stillJump = false;
-                playerAR.SetBool("Jumping", false);
-                playerAR.SetBool("Jump Landing Done", false);
+                objectAR.SetBool("Jumping", false);
+                objectAR.SetBool("Jump Landing Done", false);
             }
         }
         
@@ -269,7 +267,7 @@ public class PlayerScript : MonoBehaviour
             {
                 staggerMovement.x = -staggerMovementSpeed;
 
-                if (playerSR.flipX)
+                if (objectSR.flipX)
                     sameDirection = true;
                 else
                     otherDirection = true;
@@ -278,7 +276,7 @@ public class PlayerScript : MonoBehaviour
             {
                 staggerMovement.x = staggerMovementSpeed;
 
-                if (playerSR.flipX)
+                if (objectSR.flipX)
                     otherDirection = true;
                 else
                     sameDirection = true;
@@ -294,7 +292,7 @@ public class PlayerScript : MonoBehaviour
 
     private void JumpLandingDone() //For animator use only
     {
-        playerAR.SetTrigger("Jump Landing Done");
+        objectAR.SetTrigger("Jump Landing Done");
     }
 
 
@@ -346,7 +344,7 @@ public class PlayerScript : MonoBehaviour
                                     private int hitBox = 0;
     private void BaseAttackHitBoxActivation()
     {
-        hitBox = int.Parse(playerAR.GetCurrentAnimatorClipInfo(0)[0].clip.name.Substring(locationOfHitBoxNumber));
+        hitBox = int.Parse(objectAR.GetCurrentAnimatorClipInfo(0)[0].clip.name.Substring(locationOfHitBoxNumber));
         //The minus one is needed for the array indexing which starts at zero. The first attack is base attack 1 and that
         //refers to the second hit box in array indexing.
         attackHitBoxes[hitBox - 1].enabled = true;
@@ -386,16 +384,16 @@ public class PlayerScript : MonoBehaviour
     private void EnableScript() //For animator use only
     {
         this.enabled = true;
-        playerAR.SetBool("Entered Level" , true);
+        objectAR.SetBool("Entered Level" , true);
     }
     //--------------------------------------------------|  MISCELLANEOUS FUNCTIONS
     //--------------------------------------------------|  PLAYER HEALTH FUNCTIONS
                                         private bool dead = false;
     public void HealthLost(float healthLost)
     {
-        playerHealth -= healthLost;
+        health -= healthLost;
         
-        if (playerHealth <= 0)
+        if (health <= 0)
         {
             dead = true;
             GameOverTextScript.victory = false;
@@ -407,7 +405,7 @@ public class PlayerScript : MonoBehaviour
         ChangeScene.ChangeSceneFunction("Game End Scene");
     }
 
-    public float GetPlayerHealth => playerHealth;
+    public float GetPlayerHealth => health;
     //--------------------------------------------------| PLAYER HEALTH FUNCTIONS
     //--------------------------------------------------| STATE SETTING FUNCTIONS
     private void SetState()
@@ -437,33 +435,33 @@ public class PlayerScript : MonoBehaviour
     private void StateEffects()
     {
         if (jumpVelocityUpdated)
-            playerAR.SetFloat("Vertical Speed", playerRB.linearVelocityY);
+            objectAR.SetFloat("Vertical Speed", playerRB.linearVelocityY);
 
         if (playerState == PlayerState.Idle)
         {
-            playerAR.SetTrigger("Idle");
+            objectAR.SetTrigger("Idle");
         }
 
         else if (playerState == PlayerState.Sprint)
         {
-            playerAR.SetTrigger("Sprinting");
+            objectAR.SetTrigger("Sprinting");
         }
 
         else if (playerState == PlayerState.Dash)
         {
-            playerAR.SetTrigger("Dashing");
+            objectAR.SetTrigger("Dashing");
         }
 
         else if (playerState == PlayerState.Jump)
         {
-            playerAR.SetBool("Jumping" , true);
+            objectAR.SetBool("Jumping" , true);
         }
 
         else if (playerState == PlayerState.Attack)
         {
             if (attackTriggerVariable)
             {
-                playerAR.SetTrigger("Attacking");
+                objectAR.SetTrigger("Attacking");
                 attackTriggerVariable = false;
             }
         }
@@ -472,21 +470,21 @@ public class PlayerScript : MonoBehaviour
         {
             if (animationDamageTrigger)
             {
-                playerAR.SetTrigger("Received Hit");
-                playerAR.SetBool("Jumping", false);
+                objectAR.SetTrigger("Received Hit");
+                objectAR.SetBool("Jumping", false);
 
                 if (sameDirection)
-                    playerAR.SetBool("Hit Direction", true);
+                    objectAR.SetBool("Hit Direction", true);
 
                 else if (otherDirection)
-                    playerAR.SetBool("Hit Direction", false);
+                    objectAR.SetBool("Hit Direction", false);
 
                 animationDamageTrigger = false;
             }
         }
 
         else if (playerState == PlayerState.Dead)
-            playerAR.SetTrigger("Dead");
+            objectAR.SetTrigger("Dead");
 
         DirectionSetting();
     }
@@ -496,13 +494,13 @@ public class PlayerScript : MonoBehaviour
     {
         if ((Mathf.Abs(playerRB.linearVelocityX) <= playerZeroSpeed) || 
             (horizontalMovementInput.ReadValue<float>() == 0) || solidHitLanded)
-            playerSR.flipX = playerSR.flipX;
+            objectSR.flipX = objectSR.flipX;
 
         else
         {
-            playerSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
+            objectSR.flipX = (playerRB.linearVelocityX < 0 ? true : false);
 
-            if (playerSR.flipX)
+            if (objectSR.flipX)
             {
                 foreach (BoxCollider2D box in attackHitBoxes)
                 {
