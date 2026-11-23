@@ -1,14 +1,11 @@
 using UnityEngine;
 
-public abstract class MonsterScript : MonoBehaviour
+public abstract class MonsterScript : StageEntityScript
 {
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected BoxCollider2D attackCollider;
-    protected GameObject player;
-    protected SpriteRenderer monsterSR;
-    protected Animator monsterAR;
+    [SerializeField] protected GameObject player;
 
-    [SerializeField] protected int monsterHealth = 3;
     //--------------------------------------------------| MOVEMENT FUNCTIONS
     protected abstract void MonsterBaseMove();
     protected abstract void MonsterAttackMove();

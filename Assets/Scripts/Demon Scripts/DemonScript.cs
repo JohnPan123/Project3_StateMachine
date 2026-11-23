@@ -11,16 +11,16 @@ public class DemonScript : MonsterScript
         BreathAttack = 3
     }
 
-    void Start()
+    private void Start()
     {
-        player = GameObject.Find(PlayerScript.playerName);
+        player = GameObject.Find(GenericScript.PlayerName);
 
-        monsterAR = GetComponent<Animator>();
-        monsterSR = GetComponent<SpriteRenderer>();
+        objectAR = GetComponent<Animator>();
+        objectSR = GetComponent<SpriteRenderer>();
 
         demonState = DemonStates.Idle;
 
-        monsterHealth = 3;
+        health = 3;
     }
 
     void Update()
@@ -95,7 +95,7 @@ public class DemonScript : MonsterScript
                                 private const float demonAttackSpeed = 4.5f;
     protected override void MonsterAttackMove()
     {
-        if (!attackCollider.enabled && monsterAR.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Demon Attack Breath")
+        if (!attackCollider.enabled && objectAR.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Demon Attack Breath")
             attackCollider.enabled = true;
 
         if (transform.position.x < player.transform.position.x)
@@ -124,7 +124,7 @@ public class DemonScript : MonsterScript
     {
         for (float verticalComponenet = 0f ; verticalComponenet < verticalViewRange ; verticalComponenet += verticalViewIncr)
         {
-            rayDirection.x = (monsterSR.flipX ? 1 : -1) * horizontalViewRange;
+            rayDirection.x = (objectSR.flipX ? 1 : -1) * horizontalViewRange;
             rayDirection.y = -verticalComponenet;
 
             Debug.DrawLine(transform.position, transform.position + (Vector3)rayDirection, Color.blue);
@@ -142,9 +142,9 @@ public class DemonScript : MonsterScript
                                 private Vector2 deathSpriteOffset = new Vector2(0.7f , 0);
     public override void LoseHealth(int healthLost)
     {
-        monsterHealth -= healthLost;
+        health -= healthLost;
 
-        if (monsterHealth <= 0)
+        if (health <= 0)
         {
             if (movePhase == 1)
                 transform.Translate(deathSpriteOffset);
@@ -174,10 +174,10 @@ public class DemonScript : MonsterScript
     protected override void StateEffects()
     {
         if (demonState == DemonStates.Death)
-            monsterAR.SetBool("Dead", true);
+            objectAR.SetBool("Dead", true);
         
         else if (demonState == DemonStates.BreathAttack)
-            monsterAR.SetBool("Attacking" , true);
+            objectAR.SetBool("Attacking" , true);
     }
 
 
@@ -186,13 +186,13 @@ public class DemonScript : MonsterScript
     private void DirectionSetting()
     {
         if ((movePhase == 0) || (movePhase == 2))
-            monsterSR.flipX = monsterSR.flipX;
+            objectSR.flipX = objectSR.flipX;
 
         else if (movePhase == 1)
-            monsterSR.flipX = false;
+            objectSR.flipX = false;
 
         else
-            monsterSR.flipX = true;
+            objectSR.flipX = true;
 
         SetHitBoxBasedOnDirection();
     }
@@ -200,7 +200,7 @@ public class DemonScript : MonsterScript
                                     private const float colliderXOffset = 0.72f;
     private void SetHitBoxBasedOnDirection()
     {
-        hitBoxLocation.x = (monsterSR.flipX ? colliderXOffset : -colliderXOffset);
+        hitBoxLocation.x = (objectSR.flipX ? colliderXOffset : -colliderXOffset);
         attackCollider.offset = hitBoxLocation;
     }
     //--------------------------------------------------| STATE SETTING FUNCTIONS
