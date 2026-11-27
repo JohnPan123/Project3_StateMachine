@@ -36,16 +36,14 @@ public class MushroomScript : MonsterScript
     void Update()
     {
         //DebugFunction();
-        if (!dead)
-        {
-            if (attacking || flinching) ;
-            else if (idleAfterFlinchingBool)
-                AfterFlinchingIdle();
-            else if (idleAfterAttackBool)
-                AfterAttackIdle();
-            else
-                MonsterDetectAttack();
-        }
+        if (dead || attacking || flinching) ;
+        else if (idleAfterFlinchingBool)
+            AfterFlinchingIdle();
+        else if (idleAfterAttackBool)
+            AfterAttackIdle();
+        else
+            MonsterDetectAttack();
+
 
         SetState();
         StateEffects();

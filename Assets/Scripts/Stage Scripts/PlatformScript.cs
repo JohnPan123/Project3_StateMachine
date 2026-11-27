@@ -1,35 +1,24 @@
 using UnityEngine;
 
-public class PlatformScript : MonoBehaviour
+public class PlatformScript : StageObjectScript
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private BoxCollider2D platformBox;
+
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask noLayer;
-    private BoxCollider2D platformBox;
 
-    void Start()
-    {
-        platformBox = GetComponent<BoxCollider2D>();
-    }
+    void Update() { PlatformActivation(); }
 
-    void Update()
-    {
-        PlatformActivation();
-    }
-
-    private const float playerIsHighEnoughFromPlatformHeight = 0.9315f;
+                                private const float playerIsHighEnoughFromPlatformHeight = 0.83f;
+                                private float deactivationHeight = 0.01f;
     private void PlatformActivation()
     {
+        //Exclude layers ovverides include layers so I do not need to handle that one.
         if (player.transform.position.y > (transform.position.y + playerIsHighEnoughFromPlatformHeight))
-        {
-            platformBox.includeLayers = playerLayer;
             platformBox.excludeLayers = noLayer;
 
-        }
-        else
-        {
-            platformBox.includeLayers = noLayer;
+        else if (player.transform.position.y < (transform.position.y - deactivationHeight))
             platformBox.excludeLayers = playerLayer;
-        }
     }
 }
