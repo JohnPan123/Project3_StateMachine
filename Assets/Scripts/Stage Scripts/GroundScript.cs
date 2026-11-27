@@ -6,8 +6,8 @@ public class GroundScript : StageObjectScript
 
     void Update() { PlatformActivation(); }
 
-    private const float playerIsHighEnoughFromPlatformHeight = 0.83f;
-    private float deactivationHeight = 0.01f;
+                                private const float playerIsHighEnoughFromPlatformHeight = 0.83f;
+                                private float deactivationHeight = 0.01f;
     private void PlatformActivation()
     {
         //Exclude layers ovverides include layers so I do not need to handle that one.
