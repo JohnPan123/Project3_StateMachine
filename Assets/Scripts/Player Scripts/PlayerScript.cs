@@ -13,7 +13,7 @@ public class PlayerScript : StageEntityScript
 
     private const float playerZeroSpeed = 0.1f;
     private const float entrySpeed = 7.77f;
-    public const string playerTag = "Player";
+    public new const string ObjectName = "Player";
 
     [SerializeField] private List<BoxCollider2D> attackHitBoxes;
     private Dictionary<string, int> landingLayersDict = new Dictionary<string , int>();

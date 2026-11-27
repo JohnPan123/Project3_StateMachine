@@ -13,7 +13,7 @@ public class DemonScript : MonsterScript
 
     private void Start()
     {
-        player = GameObject.Find(PlayerScript.playerTag);
+        player = GameObject.Find(PlayerScript.ObjectName);
 
         objectAR = GetComponent<Animator>();
         objectSR = GetComponent<SpriteRenderer>();
