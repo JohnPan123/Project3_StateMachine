@@ -712,7 +712,7 @@ TextureImporter:
         width: 31
         height: 42
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -729,19 +729,19 @@ TextureImporter:
       name: Terrain_and_Props_25
       rect:
         serializedVersion: 2
-        x: 95
-        y: 494
-        width: 50
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 259
+        width: 108
+        height: 111
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b1b3c5d54f782ee4c83f4e3bb6f00ab0
+      spriteID: 769b6705f10d9ab48b1574af1ac88cdb
       internalID: 2082609964
       vertices: []
       indices: 
@@ -780,6 +780,7 @@ TextureImporter:
       Terrain_and_Props_23: -2104140580
       Terrain_and_Props_24: -112577336
       Terrain_and_Props_25: 2082609964
+      Terrain_and_Props_26: -996106718
       Terrain_and_Props_3: 3068277905654777829
       Terrain_and_Props_4: -7662601631111615731
       Terrain_and_Props_5: 777567994236811104

@@ -5,9 +5,6 @@ public class PlatformScript : StageObjectScript
     [SerializeField] private GameObject player;
     [SerializeField] private BoxCollider2D platformBox;
 
-    [SerializeField] private LayerMask playerLayer;
-    [SerializeField] private LayerMask noLayer;
-
     void Update() { PlatformActivation(); }
 
                                 private const float playerIsHighEnoughFromPlatformHeight = 0.83f;
