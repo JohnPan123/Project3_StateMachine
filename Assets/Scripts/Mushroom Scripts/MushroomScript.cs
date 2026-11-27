@@ -17,7 +17,7 @@ public class MushroomScript : MonsterScript
     }
     private void Start()
     {
-        player = GameObject.Find(GenericScript.PlayerName);
+        player = GameObject.Find(PlayerScript.playerTag);
 
         objectAR = GetComponent<Animator>();
         objectSR = GetComponent<SpriteRenderer>();

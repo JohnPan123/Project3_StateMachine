@@ -8,7 +8,7 @@ public class AHBDemonScript : MonoBehaviour
     {
         GameObject objectCollidedWith = collision.gameObject;
 
-        if (objectCollidedWith.CompareTag(GenericScript.playerName))
+        if (objectCollidedWith.CompareTag(PlayerScript.playerTag))
             objectCollidedWith.GetComponent<PlayerScript>().HealthLost(breathAttackDamage);
     }
 }
