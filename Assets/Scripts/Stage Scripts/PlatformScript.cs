@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlatformScript : StageObjectScript
 {
-    [SerializeField] private GameObject player;
     [SerializeField] private BoxCollider2D platformBox;
 
     void Update() { PlatformActivation(); }
